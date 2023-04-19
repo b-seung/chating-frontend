@@ -1,7 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function App() {
+  const [message, setMessage] = useState();
+
+  useEffect(() => {
+    axios
+      .get("/api/hello")
+      .then((res) => {
+        console.log(res.data);
+        return res.data;
+      })
+      .then((data) => setMessage(data));
+  });
+
   return (
     <div className="App">
       <header className="App-header">
@@ -15,7 +29,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          {message}
         </a>
       </header>
     </div>
