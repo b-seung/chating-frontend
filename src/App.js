@@ -10,7 +10,7 @@ function App() {
     axios
       .get("/api/hello")
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
         return res.data;
       })
       .then((data) => setMessage(data));
@@ -18,20 +18,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {message}
-        </a>
-      </header>
+      <a>{message}</a>
     </div>
   );
 }
