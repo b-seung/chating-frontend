@@ -1,26 +1,22 @@
-import logo from "./logo.svg";
 import "./App.css";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import Header from "./page/common/Header";
+import Header from "./components/common/Header";
+import Login from "./components/Login";
+import { Route, Routes } from "react-router-dom";
+import { useState } from "react";
 
 function App() {
-  const [message, setMessage] = useState();
+  const [menu, setMenu] = useState(false);
 
-  // useEffect(() => {
-  //   axios
-  //     .get("/api/hello")
-  //     .then((res) => {
-  //       console.log(res);
-  //       return res.data;
-  //     })
-  //     .then((data) => setMessage(data));
-  // });
+  const onMenu = () => {
+    setMenu(!menu);
+  };
 
   return (
-    <div className="App">
-      <Header></Header>
-      <a>{message}</a>
+    <div>
+      <Header onMenu={onMenu}></Header>
+      <Routes>
+        <Route path="/" element={<Login menu={menu}></Login>}></Route>
+      </Routes>
     </div>
   );
 }

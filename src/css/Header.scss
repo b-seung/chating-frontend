@@ -1,0 +1,29 @@
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: solid 1px;
+
+  button {
+    background: none;
+    border: none;
+    padding: 4vh 5vw;
+    font-size: max(1.5rem, min(5vw, 30px));
+    cursor: pointer;
+  }
+
+  .title {
+    width: 100%;
+    height: fit-content;
+    padding: 4vh 1vw;
+    flex-grow: 1;
+    font-size: max(1.5rem, min(5vw, 30px));
+
+    .logo {
+      width: fit-content;
+      margin: 0 auto;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  }
+}
