@@ -56,6 +56,7 @@ const JoinMember = () => {
   const changeDay = (e) => {
     setDay(e.target.value);
   };
+  //
 
   return (
     <div className="joinMemberPage">
