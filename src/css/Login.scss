@@ -1,0 +1,77 @@
+.loginPage {
+  .titleBox {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .title {
+    text-align: center;
+    font-size: max(1.5rem, min(5vw, 30px));
+    font-weight: bold;
+    padding: min(100px, 9vh) 0;
+  }
+  .message {
+    position: absolute;
+    bottom: 0;
+    width: min(520px, 90vw);
+    color: #f00;
+    font-weight: bold;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .inputBox {
+    background-color: #d9d9d9;
+    border-radius: 50px;
+    display: flex;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 25px;
+  }
+
+  .icon {
+    margin: 5px;
+    color: #00000055;
+  }
+
+  input {
+    background-color: #ffffff00;
+    border: none;
+    width: 100%;
+  }
+
+  .button {
+    width: min(520px, 90vw);
+    border: none;
+    font-size: max(1rem, min(3vw, 20px));
+    font-weight: bold;
+    color: white;
+    padding: 10px 0px;
+    cursor: pointer;
+  }
+  form > div {
+    width: min(520px, 90vw);
+  }
+  .loginBtn {
+    background: #62d181;
+    margin: 10px;
+  }
+  .resetBtn {
+    width: fit-content;
+    border: none;
+    float: right;
+    border-bottom: solid 1px;
+    background: #ffffff00;
+    font-size: 10px;
+    cursor: pointer;
+  }
+  .accountBtn {
+    background: #9fc2e2;
+    margin-top: 40px;
+  }
+}
