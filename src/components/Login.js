@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { changeInputId, changeInputPw, changeId } from "../modules/login";
 import { getData } from "../api/api";
 import "../css/Login.scss";
+import { testcase } from "../api/test";
 
 const Login = ({
   menu,
@@ -26,13 +27,10 @@ const Login = ({
     }
   }, [navigate]);
 
-  const [members, setMembers] = useState(new Array());
   const [loginError, setLoginError] = useState(false);
 
   const idInput = useRef(null);
   const pwInput = useRef(null);
-
-  getData("/member/all").then((result) => setMembers(result));
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -48,25 +46,37 @@ const Login = ({
       return;
     }
 
-    members.forEach((member) => {
-      if (member.id === inputId && member.password === inputPw) {
-        sessionStorage.setItem("loginId", inputId);
+    for (let i = 0; i < testcase.getLength(); i++) {
+      if (
+        testcase.test_id[i] === inputId &&
+        testcase.test_password[i] === inputPw
+      ) {
+        testcase.setLoginId(inputId);
         changeId(inputId);
         return navigate("/");
       }
-    });
+    }
+    // getData("/member/all").then((members) => {
+    //   members.forEach((member) => {
+    //     if (member.id === inputId && member.password === inputPw) {
+    //       sessionStorage.setItem("loginId", inputId);
+    //       changeId(inputId);
+    //       return navigate("/");
+    //     }
+    //   });
+    // });
 
     setLoginError(true);
   };
 
   const onReset = (e) => {
     e.preventDefault();
-    console.log("reset");
+    navigate("/lost");
   };
 
   const onAccount = (e) => {
     e.preventDefault();
-    console.log("account");
+    navigate("/join");
   };
 
   const onChange1 = (e) => {
@@ -74,6 +84,11 @@ const Login = ({
   };
   const onChange2 = (e) => {
     changeInputPw(e.target.value);
+  };
+
+  const onVisiblePw = () => {
+    if (pwInput.current.type === "text") pwInput.current.type = "password";
+    else if (pwInput.current.type === "password") pwInput.current.type = "text";
   };
 
   return (
@@ -103,10 +118,11 @@ const Login = ({
           <input
             placeholder="パスワード"
             value={inputPw}
+            type="password"
             onChange={onChange2}
             ref={pwInput}
           />
-          <MdVisibility className="icon" />
+          <MdVisibility className="icon visible" onClick={onVisiblePw} />
         </div>
         <button className="button loginBtn" type="submit">
           ログインする

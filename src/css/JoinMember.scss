@@ -1,0 +1,77 @@
+.joinMemberPage {
+  .title {
+    text-align: center;
+    font-size: max(1.5rem, min(5vw, 30px));
+    font-weight: bold;
+    padding: min(100px, 9vh) 0;
+    text-decoration: underline;
+  }
+  form {
+    width: min(520px, 90vw);
+    text-align: center;
+    margin: 0 auto;
+  }
+  .inputBox {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 20px 0;
+  }
+  input,
+  .idBox,
+  .selectBox {
+    display: flex;
+    flex-grow: 1;
+  }
+  .idInput {
+    flex-grow: 1;
+  }
+  .key {
+    width: max(20vw, 120px);
+    text-align: left;
+    font-size: 15px;
+    display: flex;
+    align-self: center;
+  }
+  input {
+    padding: 8px 0;
+  }
+  select {
+    flex-grow: 1;
+    text-align: center;
+    padding: 10px 0;
+  }
+  .inputBox p {
+    text-align: center;
+    padding: 0 2px;
+    font-size: 15px;
+    margin: 0;
+    display: flex;
+    align-self: center;
+  }
+  .checkId {
+    border-radius: 30px;
+    font-weight: bold;
+    color: white;
+    background-color: #a3a3a3;
+    border: none;
+    margin-left: 5px;
+    padding: 0 5px;
+    cursor: pointer;
+  }
+  .joinBtn {
+    margin-top: 20px;
+    margin-bottom: 50px;
+    padding: 10px 0;
+    border: none;
+    font-size: max(1rem, min(3vw, 20px));
+    color: white;
+    width: min(520px, 90vw);
+    background: #ff7979;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .noPass {
+    color: red;
+  }
+}

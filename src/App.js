@@ -5,6 +5,7 @@ import Login from "./components/Login";
 import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import JoinMember from "./components/JoinMember";
+import LostMain from "./components/lostPassword/LostMain";
 
 function App() {
   const [menu, setMenu] = useState(false);
@@ -22,6 +23,10 @@ function App() {
         <Route
           path="/join"
           element={<JoinMember menu={menu}></JoinMember>}
+        ></Route>
+        <Route
+          path="/lost/*"
+          element={<LostMain menu={menu}></LostMain>}
         ></Route>
       </Routes>
     </div>

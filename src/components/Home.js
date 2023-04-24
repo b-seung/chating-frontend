@@ -1,12 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
+import { useEffect } from "react";
 
 const Home = ({ loginId }) => {
   const navigate = useNavigate();
 
-  if (loginId === null) {
-    if (!alert("ログインしてください。")) document.location = "./login";
-  }
+  useEffect(() => {
+    if (loginId === null) {
+      if (!alert("ログインしてください。")) document.location = "/login";
+    }
+  });
 
   const onClick = () => {
     navigate("./login");
