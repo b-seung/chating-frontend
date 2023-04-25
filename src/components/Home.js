@@ -2,6 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 
+const FriendItem = () => {};
+
+const TalkItem = () => {};
+
 const Home = ({ loginId }) => {
   const navigate = useNavigate();
 
