@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import "../css/JoinMember.scss";
 import { postData } from "../api/api";
 import { useNavigate } from "react-router-dom";
-import { testcase } from "../api/test";
+import { loginTableTest } from "../api/test";
 import { createCalendarOption, getFormatDate } from "../modules/common";
 
 const JoinMember = () => {
@@ -62,7 +62,7 @@ const JoinMember = () => {
       return;
     }
 
-    if (testcase.checkId(id)) {
+    if (loginTableTest.checkId(id)) {
       alert("既に使用されているIDです");
       idInput.current.value = "";
       idInput.current.focus();
@@ -125,7 +125,7 @@ const JoinMember = () => {
     //   birthday: "2015-07-20",
     // }).then((res) => console.log(res));
 
-    testcase.addData(
+    loginTableTest.addData(
       idInput.current.value,
       pwInput.current.value,
       nicknameInput.current.value,

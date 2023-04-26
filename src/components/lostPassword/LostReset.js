@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { MdOutlineArrowCircleRight } from "react-icons/md";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { testcase } from "../../api/test";
+import { loginTableTest } from "../../api/test";
 
 const LostReset = ({ isOk }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -50,7 +50,7 @@ const LostReset = ({ isOk }) => {
       return;
     }
 
-    testcase.resetPassword(searchParams.get("id"), password);
+    loginTableTest.resetPassword(searchParams.get("id"), password);
     alert("パスワードの変更が完了しました。");
 
     navigate("/login");

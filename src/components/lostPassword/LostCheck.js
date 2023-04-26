@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createCalendarOption } from "../../modules/common";
 import { MdOutlineArrowCircleRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { testcase } from "../../api/test";
+import { loginTableTest } from "../../api/test";
 import { getFormatDate } from "../../modules/common";
 
 const LostCheck = ({ setOk }) => {
@@ -68,7 +68,7 @@ const LostCheck = ({ setOk }) => {
     e.preventDefault();
     if (!activate) return;
 
-    const user = testcase.findUser(
+    const user = loginTableTest.findUser(
       nickname,
       id,
       getFormatDate(year, month, day)

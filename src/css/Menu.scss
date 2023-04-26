@@ -1,0 +1,62 @@
+.menuPage {
+  width: 300px;
+  background: white;
+  border-right: 1px solid;
+  border-left: 1px solid;
+  border-bottom: 1px solid;
+  position: absolute;
+  z-index: 1;
+  height: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  transition: all 0.5s;
+
+  .exitBox {
+    text-align: right;
+    padding: 10px;
+  }
+
+  .exit {
+    cursor: pointer;
+    padding: 10px;
+    font-size: 15px;
+  }
+
+  .menuBar {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    padding: 20px 10px;
+    border-bottom: 1px solid;
+  }
+
+  .menuBar:nth-last-child(1) {
+    border-bottom: none;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+    margin-left: 5px;
+  }
+}
+
+.open {
+  left: 0;
+}
+
+.close {
+  left: -100%;
+}
+
+@media (max-width: 600px) {
+  .menuPage {
+    width: 80vw;
+  }
+}
+
+@media (max-width: 400px) {
+  .menuPage {
+    width: 100vw;
+  }
+}

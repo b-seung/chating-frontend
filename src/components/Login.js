@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { changeInputId, changeInputPw, changeId } from "../modules/login";
 import { getData } from "../api/api";
 import "../css/Login.scss";
-import { testcase } from "../api/test";
+import { loginTableTest } from "../api/test";
 
 const Login = ({
   menu,
@@ -46,12 +46,12 @@ const Login = ({
       return;
     }
 
-    for (let i = 0; i < testcase.getLength(); i++) {
+    for (let i = 0; i < loginTableTest.getLength(); i++) {
       if (
-        testcase.test_id[i] === inputId &&
-        testcase.test_password[i] === inputPw
+        loginTableTest.test_id[i] === inputId &&
+        loginTableTest.test_password[i] === inputPw
       ) {
-        testcase.setLoginId(inputId);
+        loginTableTest.setLoginId(inputId);
         changeId(inputId);
         return navigate("/");
       }

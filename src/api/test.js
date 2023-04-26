@@ -4,18 +4,13 @@ function LoginTable() {
   this.test_nickname = ["test1", "test2", "test3"];
   this.test_birthday = ["2023-04-24", "2023-04-25", "2023-04-26"];
 
-  this.test_login_id = "";
+  this.test_login_id = "test1";
 
   this.addData = (id, pw, name, date) => {
     this.test_id.push(id);
     this.test_password.push(pw);
     this.test_nickname.push(name);
     this.test_birthday.push(date);
-
-    console.log(this.test_id);
-    console.log(this.test_password);
-    console.log(this.test_nickname);
-    console.log(this.test_birthday);
   };
 
   this.setLoginId = (id) => {
@@ -52,6 +47,18 @@ function LoginTable() {
   this.resetPassword = (id, password) => {
     this.test_password[this.test_id.indexOf(id)] = password;
   };
+
+  this.getNickname = (id) => {
+    return this.test_nickname[this.test_id.indexOf(id)];
+  };
+
+  this.getBirthday = (id) => {
+    return this.test_birthday[this.test_id.indexOf(id)];
+  };
+
+  this.checkId = (id) => {
+    return this.test_id.indexOf(id) === -1 ? false : true;
+  };
 }
 
 function FriendsTable() {
@@ -61,12 +68,32 @@ function FriendsTable() {
   this.getFriendsList = (loginId) => {
     const result = [];
 
-    this.myId.forEach(id, index => {
-      if (id === loginId) result.push(this.yourId[index]);
-    })
+    this.myId.forEach((id, index) => {
+      if (id === loginId && result.indexOf(this.yourId[index]) === -1)
+        result.push(this.yourId[index]);
+    });
 
     return result;
-  }
+  };
+
+  this.isFriends = (loginId) => {
+    const result = [];
+
+    // for (let i = 4; i < 100; i++) {
+    //   this.myId.push(`test${i}`);
+    //   this.yourId.push(loginId);
+    // }
+
+    this.yourId.forEach((id, index) => {
+      if (id === loginId)
+        result.push({
+          id: this.myId[index],
+          nickname: loginTableTest.getNickname(this.myId[index]),
+        });
+    });
+
+    return result;
+  };
 }
 
 function ChatsData(id, text, datetime) {
@@ -75,26 +102,19 @@ function ChatsData(id, text, datetime) {
   this.datetime = datetime;
 }
 
-function Chat(id, text, )
+function Chat(id, text, time) {}
 
 function ChatTable() {
   this.chatList = new Array();
 
-  this.chatList.push(new Chat("test1", "test2", "おはよう", "2023-04-25 17:19:52"));
-  this.chatList.push(new Chat("test1", "test2", "こんにちは", "2023-04-25 17:20:14"));
-  this.chatList.push(new Chat("test1", "test3", "こんばんは", "2023-04-25 17:20:55"));
-  this.chatList.push(new Chat("test2", "test1", "いただきます", "2023-04-25 17:21:17"));
+  this.chatList.push(new Chat("test2", "おはよう", "2023-04-25 17:19:52"));
+  // this.chatList.push(new Chat("test1", "test2", "こんにちは", "2023-04-25 17:20:14"));
+  this.chatList.push(new Chat("test3", "こんばんは", "2023-04-25 17:20:55"));
+  this.chatList.push(new Chat("test1", "いただきます", "2023-04-25 17:21:17"));
 
-  this.getChatList = (loginId) => {
-    const chats = new Map();
-
-    this.chatList.forEach(chat=> {
-      if (chat.myId === loginId || chat.yourId === loginId) ;
-    })
-
-    chats.sort(chat1, chat2 => {return chat2.datetime - char1.datetime});
-    return chats;
-  }
+  this.getList = () => {
+    return this.chatList;
+  };
 }
 
 export const loginTableTest = new LoginTable();

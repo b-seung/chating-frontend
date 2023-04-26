@@ -1,40 +1,46 @@
-import {MdClear, MdOutlinePermContactCalendar, MdPersonAddAlt1, MdDescription, MdKey, MdOutlineLogin} from 'react-icons/md';
+import {
+  MdClear,
+  MdOutlinePermContactCalendar,
+  MdPersonAddAlt1,
+  MdDescription,
+  MdKey,
+  MdOutlineLogin,
+} from "react-icons/md";
+import { Link } from "react-router-dom";
+import "../../css/Menu.scss";
 
-const Menu = ({setMenu}) => {
-    return (
-        <>
-            <div>
-                <MdClear className="exit"/>
-            </div>
-            <Link to="/mypage">
-                <div　className={menuBar}>
-                    <MdOutlinePermContactCalendar />
-                    <div>マイページ</div>
-                </div>
-            </Link>
-            <Link to="/addfriend">
-                <div　className={menuBar}>
-                    <MdPersonAddAlt1 />
-                    <div>友達追加</div>
-                </div>
-            </Link><Link to="/userupdate">
-                <div　className={menuBar}>
-                    <MdDescription />
-                    <div>登録情報修正</div>
-                </div>
-            </Link><Link to="/passwordreset">
-                <div　className={menuBar}>
-                    <MdKey />
-                    <div>パスワード再設定</div>
-                </div>
-            </Link><Link to="/secession">
-                <div　className={menuBar}>
-                    <MdOutlineLogin />
-                    <div>会員退会</div>
-                </div>
-            </Link>
-        </>
-    )
-}
+const Menu = ({ menu, openMenu }) => {
+  return (
+    <div className={`menuPage ${menu ? "open" : "close"}`}>
+      <div className="exitBox">
+        <MdClear className="exit" onClick={openMenu} />
+      </div>
+      <div className="menuBar" onClick={openMenu}>
+        <MdOutlinePermContactCalendar />
+        <Link to="/mypage">マイページ </Link>
+      </div>
+
+      <div className="menuBar" onClick={openMenu}>
+        <MdPersonAddAlt1 />
+        <Link to="/addfriend">友達追加 </Link>
+      </div>
+
+      <div className="menuBar" onClick={openMenu}>
+        <MdDescription />
+        <Link to="/userupdate">登録情報修正 </Link>
+      </div>
+
+      <div className="menuBar" onClick={openMenu}>
+        <MdKey />
+        <Link to="/passwordreset">パスワード再設定</Link>
+      </div>
+
+      <div className="menuBar">
+        <MdOutlineLogin />
+        <Link to="/secession">会員退会</Link>
+      </div>
+    </div>
+  );
+};
 
 export default Menu;
