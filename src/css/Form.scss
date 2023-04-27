@@ -1,0 +1,159 @@
+.lostMain,
+.updatePage,
+.pwResetPage,
+.secessionPage {
+  font-size: 15px;
+
+  .title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    padding-top: min(100px, 9vh);
+  }
+  .subtitle {
+    margin: max(25px, 4vh) 10px max(50px, 8vh) 10px;
+    font-size: 12px;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  form,
+  .form {
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .inputBox,
+  .box {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 20px 0;
+  }
+
+  .inputBox p {
+    text-align: center;
+    padding: 0 2px;
+    margin: 0;
+    display: flex;
+    align-self: center;
+  }
+
+  select {
+    flex-grow: 1;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .key {
+    width: 150px;
+    display: flex;
+    align-items: center;
+  }
+
+  input,
+  .value {
+    padding: 8px 0;
+  }
+
+  input,
+  .value,
+  .selectBox {
+    display: flex;
+    flex-grow: 1;
+  }
+
+  .btnBox {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+    margin: max(8vh, 50px) 0;
+  }
+
+  button {
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px 0;
+  }
+
+  .preBtn {
+    background-color: #cfcfcf;
+    margin-right: 10px;
+  }
+
+  .nextBtn {
+    background-color: #62d181;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    p {
+      margin: 0;
+    }
+  }
+
+  .secessionBtn {
+    background-color: red;
+    text-align: center;
+    p {
+      margin: 0;
+    }
+  }
+
+  .noActivate {
+    background-color: #cfcfcf;
+    cursor: auto;
+  }
+
+  @media (max-width: 500px) {
+    .title {
+      font-size: 25px;
+    }
+
+    .inputBox,
+    .box {
+      flex-direction: column;
+    }
+
+    button {
+      font-size: 15px;
+    }
+
+    form,
+    .form {
+      width: 90vw;
+    }
+
+    .key {
+      margin-bottom: 5px;
+    }
+  }
+}
+
+.lostReset {
+  .inputBox {
+    margin: 60px 0;
+  }
+}
+
+.pwResetPage {
+  .key {
+    width: 200px;
+    justify-content: center;
+  }
+
+  @media (max-width: 500px) {
+    .key {
+      justify-content: left;
+    }
+  }
+}

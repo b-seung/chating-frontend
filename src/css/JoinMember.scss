@@ -71,7 +71,8 @@
     font-weight: bold;
     cursor: pointer;
   }
-  .noPass {
-    color: red;
+  .noActivate {
+    background-color: #cfcfcf;
+    cursor: auto;
   }
 }

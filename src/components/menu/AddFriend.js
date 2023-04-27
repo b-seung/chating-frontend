@@ -1,22 +1,22 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import PreButton from "../common/PreButton";
 import "../../css/AddFriend.scss";
-import { friendsTableTest } from "../../api/test";
+import { friendsTableTest, loginTableTest } from "../../api/test";
 
 const Failed = () => {
   return (
-    <div>
+    <div className="failedItem">
       <p>入力したIDと一致する会員がいません。</p>
       <p>IDを確認してもう一度検索してください。</p>
     </div>
   );
 };
 
-const Successed = ({ nickname }) => {
+const Successed = ({ friend }) => {
   return (
     <div className="successItem">
       <div className="image"></div>
-      <div className="name">{nickname}</div>
+      <div className="name">{friend.nickname}</div>
       <button className="addBtn">追加する</button>
     </div>
   );
@@ -53,12 +53,19 @@ const AddedFriend = ({ data }) => {
 const AddFriend = () => {
   const [isSearched, setIsSearched] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
-  const [friend, setFriend] = useState(null);
+  const [searchFriend, setSearchFriend] = useState(null);
 
+  const searchId = useRef(null);
   const isFriends = friendsTableTest.isFriends("test1");
 
   const onSearch = () => {
     if (!isSearched) setIsSearched(true);
+
+    setSearchResult(loginTableTest.checkId(searchId.current.value));
+    setSearchFriend({
+      id: searchId.current.value,
+      nickname: searchId.current.value,
+    });
   };
 
   return (
@@ -66,7 +73,7 @@ const AddFriend = () => {
       <PreButton />
       <div className="title">友達追加</div>
       <div className="searchBox">
-        <input placeholder="IDを入力してください。" />
+        <input ref={searchId} placeholder="IDを入力してください。" />
         <button className="searchBtn" onClick={onSearch}>
           検索
         </button>
@@ -74,7 +81,7 @@ const AddFriend = () => {
       {!isSearched ? (
         ""
       ) : searchResult ? (
-        <Successed></Successed>
+        <Successed friend={searchFriend}></Successed>
       ) : (
         <Failed></Failed>
       )}

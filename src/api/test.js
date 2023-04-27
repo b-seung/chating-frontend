@@ -68,6 +68,11 @@ function FriendsTable() {
   this.getFriendsList = (loginId) => {
     const result = [];
 
+    // for (let i = 4; i < 100; i++) {
+    //   this.myId.push(loginId);
+    //   this.yourId.push(`test${i}`);
+    // }
+
     this.myId.forEach((id, index) => {
       if (id === loginId && result.indexOf(this.yourId[index]) === -1)
         result.push(this.yourId[index]);
@@ -79,10 +84,10 @@ function FriendsTable() {
   this.isFriends = (loginId) => {
     const result = [];
 
-    // for (let i = 4; i < 100; i++) {
-    //   this.myId.push(`test${i}`);
-    //   this.yourId.push(loginId);
-    // }
+    for (let i = 4; i < 100; i++) {
+      this.myId.push(`test${i}`);
+      this.yourId.push(loginId);
+    }
 
     this.yourId.forEach((id, index) => {
       if (id === loginId)
@@ -102,16 +107,17 @@ function ChatsData(id, text, datetime) {
   this.datetime = datetime;
 }
 
-function Chat(id, text, time) {}
-
 function ChatTable() {
   this.chatList = new Array();
 
-  this.chatList.push(new Chat("test2", "おはよう", "2023-04-25 17:19:52"));
+  this.chatList.push(new ChatsData("test2", "おはよう", "2023-04-25 17:19:52"));
   // this.chatList.push(new Chat("test1", "test2", "こんにちは", "2023-04-25 17:20:14"));
-  this.chatList.push(new Chat("test3", "こんばんは", "2023-04-25 17:20:55"));
-  this.chatList.push(new Chat("test1", "いただきます", "2023-04-25 17:21:17"));
-
+  this.chatList.push(
+    new ChatsData("test3", "こんばんは", "2023-04-25 17:20:55")
+  );
+  this.chatList.push(
+    new ChatsData("test1", "いただきます", "2023-04-25 17:21:17")
+  );
   this.getList = () => {
     return this.chatList;
   };

@@ -32,10 +32,10 @@ const Menu = ({ menu, openMenu }) => {
 
       <div className="menuBar" onClick={openMenu}>
         <MdKey />
-        <Link to="/passwordreset">パスワード再設定</Link>
+        <Link to="/pwreset">パスワード再設定</Link>
       </div>
 
-      <div className="menuBar">
+      <div className="menuBar" onClick={openMenu}>
         <MdOutlineLogin />
         <Link to="/secession">会員退会</Link>
       </div>

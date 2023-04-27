@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import LostCheck from "./LostCheck";
 import LostReset from "./LostReset";
-import "../../css/LostPassword.scss";
+import "../../css/Form.scss";
 
 const LostMain = ({ menu }) => {
   const [isOk, setOk] = useState(false);

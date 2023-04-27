@@ -1,18 +1,21 @@
+import PreButton from "../common/PreButton";
 import { useState, useEffect } from "react";
 import { MdOutlineArrowCircleRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { loginTableTest } from "../../api/test";
-import { getFormatDate } from "../../modules/common";
+import "../../css/Form.scss";
+
 import BirthdayItem from "../common/Birthday";
 
-const LostCheck = ({ setOk }) => {
+const UserUpdate = () => {
   const navigate = useNavigate();
+
+  const [id, setId] = useState("");
+  const [nickname, setNickname] = useState("");
 
   const [year, setYear] = useState("-1");
   const [month, setMonth] = useState("-1");
   const [day, setDay] = useState("-1");
-  const [id, setId] = useState("");
-  const [nickname, setNickname] = useState("");
+
   const [activate, setActivate] = useState(false);
 
   useEffect(() => {
@@ -22,9 +25,12 @@ const LostCheck = ({ setOk }) => {
       day !== "-1" &&
       id !== "" &&
       nickname !== ""
-    )
+    ) {
       setActivate(true);
-    else setActivate(false);
+    } else {
+      setActivate(false);
+    }
+    console.log(activate);
   }, [year, month, day, id, nickname]);
 
   const changeYear = (e) => {
@@ -55,34 +61,24 @@ const LostCheck = ({ setOk }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     if (!activate) return;
-
-    const user = loginTableTest.findUser(
-      nickname,
-      id,
-      getFormatDate(year, month, day)
-    );
-
-    if (user) {
-      setOk(true);
-      navigate(`./reset?id=${id}`);
-    } else {
-      alert("一致するアカウントがありません");
-    }
+    console.log(`${id} ${nickname} ${year} ${month} ${day}`);
   };
 
   return (
-    <div className="lostCheck">
+    <div className="updatePage">
+      <PreButton />
+      <div className="title">登録情報修正</div>
       <div className="subtitle">
-        <p>ご登録時のログインIDとニックネーム、</p>
-        <p>生年月日を入力してください。</p>
+        <p>以下の情報を入力し、</p>
+        <p>「変更」ボタンをクリックしてください。</p>
       </div>
       <form onSubmit={onSubmit}>
         <div className="inputBox">
-          <div className={`key`}>ログインID</div>
+          <div className="key">ログインID</div>
           <input onChange={onIdChange} />
         </div>
         <div className="inputBox">
-          <div className={`key`}>ニックネーム</div>
+          <div className="key">ニックネーム</div>
           <input onChange={onNicknameChange} />
         </div>
         <div className="inputBox">
@@ -109,4 +105,4 @@ const LostCheck = ({ setOk }) => {
   );
 };
 
-export default LostCheck;
+export default UserUpdate;

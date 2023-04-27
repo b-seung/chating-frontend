@@ -57,7 +57,7 @@ const LostReset = ({ isOk }) => {
   };
 
   return (
-    <div className="lost2">
+    <div className="lostReset">
       <div className="subtitle">
         <p>新しいパスワードを入力いただき、</p>
         <p>パスワードを再設定してください。</p>
