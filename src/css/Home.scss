@@ -16,6 +16,7 @@
     cursor: pointer;
     padding: 15px 0px;
     border-bottom: 1px solid;
+    flex-shrink: 0;
   }
 
   .chattitle {
@@ -23,6 +24,7 @@
   }
 
   .friendsBox {
+    flex-shrink: 0;
     width: 80vw;
     display: flex;
     overflow-x: auto;
@@ -51,6 +53,7 @@
 
   .chatsBox {
     width: 90vw;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -60,7 +63,7 @@
     display: flex;
     flex-wrap: nowrap;
     flex-flow: row nowrap;
-    margin: 10px 0;
+    padding: 10px 0px;
 
     .mid {
       display: flex;
@@ -81,6 +84,12 @@
         text-overflow: ellipsis;
         overflow: hidden;
       }
+    }
+    .datetime {
+      display: flex;
+      flex-direction: column;
+      margin-top: auto;
+      align-items: end;
     }
   }
 

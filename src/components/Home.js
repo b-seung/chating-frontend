@@ -1,42 +1,55 @@
 import { useNavigate, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
+import { getFormatDate, getFormatTime } from "../modules/common";
 import { chatTableTest, friendsTableTest, loginTableTest } from "../api/test";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import "../css/Home.scss";
 
-const FriendItem = ({ nickname }) => {
-  const onClickFriend = () => {};
+const FriendItem = ({ nickname, openModal, navigate }) => {
+  const onClickFriend = () => {
+    openModal(true);
+    navigate(`.?id=${nickname}`);
+  };
+
   return (
-    <Link to={`.?id=${nickname}`}>
-      <div className="friendItem" onClick={onClickFriend}>
-        <div className="image"></div>
-        <div className="name">{nickname}</div>
-      </div>
-    </Link>
+    <div className="friendItem" onClick={onClickFriend}>
+      <div className="image"></div>
+      <div className="name">{nickname}</div>
+    </div>
   );
 };
 
-const TalkItem = ({ chat }) => {
+const TalkItem = ({ chat, navigate }) => {
   const { id, text, datetime } = chat;
-  const date = new Date(datetime).getDate();
+  const date = new Date(datetime);
+
   const time = new Date(datetime).getTime();
+
+  const onClickChat = () => {
+    navigate(`/chat?id=${id}`);
+  };
+
   return (
-    <div className="talkItem">
+    <div className="talkItem" onClick={onClickChat}>
       <div className="image"></div>
       <div className="mid">
         <div className="name">{id}</div>
         <div className="text">{text}</div>
       </div>
       <div className="datetime">
-        <div className="date">{date}</div>
-        <div className="time">{time}</div>
+        <div className="date">
+          {getFormatDate(date.getFullYear(), date.getMonth(), date.getDate())}
+        </div>
+        <div className="time">
+          {getFormatTime(date.getHours(), date.getMinutes())}
+        </div>
       </div>
     </div>
   );
 };
 
-const Home = ({ loginId }) => {
+const Home = ({ loginId, openModal }) => {
   const navigate = useNavigate();
 
   const [openFriends, setOpenFriends] = useState(true);
@@ -70,7 +83,12 @@ const Home = ({ loginId }) => {
       </div>
       <div className={`friendsBox ${openFriends ? "" : "hidden"}`}>
         {friendsList.map((friend, index) => (
-          <FriendItem nickname={friend} key={index}></FriendItem>
+          <FriendItem
+            nickname={friend}
+            openModal={openModal}
+            navigate={navigate}
+            key={index}
+          ></FriendItem>
         ))}
       </div>
       <div
@@ -82,7 +100,7 @@ const Home = ({ loginId }) => {
       </div>
       <div className={`chatsBox ${openChat ? "" : "hidden"}`}>
         {chatsList.map((chat, index) => (
-          <TalkItem chat={chat} key={index}></TalkItem>
+          <TalkItem chat={chat} key={index} navigate={navigate}></TalkItem>
         ))}
       </div>
     </div>

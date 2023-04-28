@@ -2,10 +2,12 @@ import { MdViewHeadline, MdSearch } from "react-icons/md";
 import "../../css/Header.scss";
 import { useNavigate } from "react-router-dom";
 
-const Header = ({ onMenu }) => {
+const Header = ({ menu, search, onMenu, onSearch }) => {
   const navigate = useNavigate();
 
   const onLogoClick = () => {
+    if (menu) onMenu();
+    if (search) onSearch();
     navigate("/");
   };
 
@@ -19,7 +21,7 @@ const Header = ({ onMenu }) => {
           LOGO
         </p>
       </div>
-      <button className="search">
+      <button className="search" onClick={onSearch}>
         <MdSearch />
       </button>
     </header>

@@ -9,7 +9,6 @@ import "../css/Login.scss";
 import { loginTableTest } from "../api/test";
 
 const Login = ({
-  menu,
   loginId,
   inputId,
   inputPw,
@@ -137,8 +136,6 @@ const Login = ({
           新しいアカウントを作成する
         </button>
       </form>
-
-      <div>{menu ? "true" : "false"}</div>
     </div>
   );
 };

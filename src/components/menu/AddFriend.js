@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import PreButton from "../common/PreButton";
 import "../../css/AddFriend.scss";
 import { friendsTableTest, loginTableTest } from "../../api/test";
+import ChatOrManage from "../common/ChatOrManage";
 
 const Failed = () => {
   return (
@@ -12,12 +13,23 @@ const Failed = () => {
   );
 };
 
-const Successed = ({ friend }) => {
+const Successed = ({ friend, isAdd }) => {
+  const [isAdded, setIsAdded] = useState(isAdd);
+
+  const onAddClick = () => {
+    setIsAdded(true);
+  };
   return (
     <div className="successItem">
       <div className="image"></div>
       <div className="name">{friend.nickname}</div>
-      <button className="addBtn">追加する</button>
+      {isAdded ? (
+        <ChatOrManage id={friend.id}></ChatOrManage>
+      ) : (
+        <button className="addBtn" onClick={onAddClick}>
+          追加する
+        </button>
+      )}
     </div>
   );
 };
@@ -81,7 +93,7 @@ const AddFriend = () => {
       {!isSearched ? (
         ""
       ) : searchResult ? (
-        <Successed friend={searchFriend}></Successed>
+        <Successed friend={searchFriend} isAdd={false}></Successed>
       ) : (
         <Failed></Failed>
       )}

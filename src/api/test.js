@@ -68,10 +68,10 @@ function FriendsTable() {
   this.getFriendsList = (loginId) => {
     const result = [];
 
-    // for (let i = 4; i < 100; i++) {
-    //   this.myId.push(loginId);
-    //   this.yourId.push(`test${i}`);
-    // }
+    for (let i = 4; i < 100; i++) {
+      this.myId.push(loginId);
+      this.yourId.push(`test${i}`);
+    }
 
     this.myId.forEach((id, index) => {
       if (id === loginId && result.indexOf(this.yourId[index]) === -1)
@@ -84,10 +84,10 @@ function FriendsTable() {
   this.isFriends = (loginId) => {
     const result = [];
 
-    for (let i = 4; i < 100; i++) {
-      this.myId.push(`test${i}`);
-      this.yourId.push(loginId);
-    }
+    // for (let i = 4; i < 100; i++) {
+    //   this.myId.push(`test${i}`);
+    //   this.yourId.push(loginId);
+    // }
 
     this.yourId.forEach((id, index) => {
       if (id === loginId)

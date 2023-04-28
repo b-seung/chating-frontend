@@ -37,6 +37,8 @@ const PasswordUpdate = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    alert("パスワードを再設定しました。\n再ログインしてください。");
+    navigate("/login");
   };
 
   return (

@@ -9,7 +9,15 @@
   height: 100%;
   margin: 0;
   box-sizing: border-box;
-  transition: all 0.5s;
+  transition: all 0.5s linear;
+
+  &.open {
+    transform: translate(0, 0);
+  }
+
+  &.close {
+    transform: translate(-300px, 0);
+  }
 
   .exitBox {
     text-align: right;
@@ -38,25 +46,24 @@
     text-decoration: none;
     color: black;
     margin-left: 5px;
+    flex-grow: 1;
   }
-}
-
-.open {
-  left: 0;
-}
-
-.close {
-  left: -100%;
 }
 
 @media (max-width: 600px) {
   .menuPage {
     width: 80vw;
+    &.close {
+      transform: translate(-80vw, 0);
+    }
   }
 }
 
 @media (max-width: 400px) {
   .menuPage {
     width: 100vw;
+    &.close {
+      transform: translate(-100vw, 0);
+    }
   }
 }
