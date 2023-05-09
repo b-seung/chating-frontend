@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { changeInputId, changeInputPw, changeId } from "../modules/login";
-import { getData } from "../api/api";
+import { getText, postData } from "../api/api";
 import "../css/Login.scss";
 import { loginTableTest } from "../api/test";
 
@@ -38,13 +38,6 @@ const Login = ({ loginId, inputId, inputPw, changeInputId, changeInputPw, change
       return;
     }
 
-    for (let i = 0; i < loginTableTest.getLength(); i++) {
-      if (loginTableTest.test_id[i] === inputId && loginTableTest.test_password[i] === inputPw) {
-        loginTableTest.setLoginId(inputId);
-        changeId(inputId);
-        return navigate("/");
-      }
-    }
     // getData("/member/all").then((members) => {
     //   members.forEach((member) => {
     //     if (member.id === inputId && member.password === inputPw) {
@@ -55,6 +48,9 @@ const Login = ({ loginId, inputId, inputPw, changeInputId, changeInputPw, change
     //   });
     // });
 
+    getText(`/member/login?id=${inputId}&password=${inputPw}`).then((result) => console.log(result));
+
+    // postData("/member/login", { id: inputId, password: inputPw }).then((result) => console.log(result));
     setLoginError(true);
   };
 
