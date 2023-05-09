@@ -37,13 +37,9 @@ const Successed = ({ friend, isAdd }) => {
 const AddedFriend = ({ data }) => {
   const [isAdd, setIsAdd] = useState(false);
 
-  const onAddClick = () => {
-    setIsAdd(true);
-  };
+  const onAddClick = () => setIsAdd(true);
 
-  const onCancelClick = () => {
-    setIsAdd(false);
-  };
+  const onCancelClick = () => setIsAdd(false);
 
   return (
     <div className="addedItem">
@@ -90,13 +86,7 @@ const AddFriend = () => {
           検索
         </button>
       </div>
-      {!isSearched ? (
-        ""
-      ) : searchResult ? (
-        <Successed friend={searchFriend} isAdd={false}></Successed>
-      ) : (
-        <Failed></Failed>
-      )}
+      {isSearched && (searchResult ? <Successed friend={searchFriend} isAdd={false}></Successed> : <Failed></Failed>)}
       <div className="addBox">
         <div className="addTitle">知り合いかも</div>
         <div className="addList">

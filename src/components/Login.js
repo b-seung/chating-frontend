@@ -8,14 +8,7 @@ import { getData } from "../api/api";
 import "../css/Login.scss";
 import { loginTableTest } from "../api/test";
 
-const Login = ({
-  loginId,
-  inputId,
-  inputPw,
-  changeInputId,
-  changeInputPw,
-  changeId,
-}) => {
+const Login = ({ loginId, inputId, inputPw, changeInputId, changeInputPw, changeId }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,10 +39,7 @@ const Login = ({
     }
 
     for (let i = 0; i < loginTableTest.getLength(); i++) {
-      if (
-        loginTableTest.test_id[i] === inputId &&
-        loginTableTest.test_password[i] === inputPw
-      ) {
+      if (loginTableTest.test_id[i] === inputId && loginTableTest.test_password[i] === inputPw) {
         loginTableTest.setLoginId(inputId);
         changeId(inputId);
         return navigate("/");
@@ -94,33 +84,16 @@ const Login = ({
     <div className="loginPage">
       <div className="titleBox">
         <div className="title">ログイン</div>
-        {loginError ? (
-          <div className="message">
-            ログインID、もしくはパスワードが異なります。
-          </div>
-        ) : (
-          ""
-        )}
+        {loginError && <div className="message">ログインID、もしくはパスワードが異なります。</div>}
       </div>
       <form onSubmit={onSubmit}>
         <div className="inputBox">
           <TiMail className="icon" />
-          <input
-            placeholder="ログインID"
-            value={inputId}
-            onChange={onChange1}
-            ref={idInput}
-          />
+          <input placeholder="ログインID" value={inputId} onChange={onChange1} ref={idInput} />
         </div>
         <div className="inputBox">
           <TiKeyOutline className="icon" />
-          <input
-            placeholder="パスワード"
-            value={inputPw}
-            type="password"
-            onChange={onChange2}
-            ref={pwInput}
-          />
+          <input placeholder="パスワード" value={inputPw} type="password" onChange={onChange2} ref={pwInput} />
           <MdVisibility className="icon visible" onClick={onVisiblePw} />
         </div>
         <button className="button loginBtn" type="submit">

@@ -37,37 +37,24 @@ const JoinMember = () => {
     } else {
       setActivate(false);
     }
-    console.log(activate);
   }, [year, month, day, id, nickname, password, passwordAgain]);
 
-  const changeYear = (e) => {
-    setYear(e.target.value);
-  };
+  const changeYear = (e) => setYear(e.target.value);
 
-  const changeMonth = (e) => {
-    setMonth(e.target.value);
-  };
+  const changeMonth = (e) => setMonth(e.target.value);
 
-  const changeDay = (e) => {
-    setDay(e.target.value);
-  };
+  const changeDay = (e) => setDay(e.target.value);
 
   const changeId = (e) => {
     setId(e.target.value);
     if (idCheck) setIdCheck(false);
   };
 
-  const changeNickname = (e) => {
-    setNickname(e.target.value);
-  };
+  const changeNickname = (e) => setNickname(e.target.value);
 
-  const changePassword = (e) => {
-    setPassword(e.target.value);
-  };
+  const changePassword = (e) => setPassword(e.target.value);
 
-  const changePasswordAgain = (e) => {
-    setPasswordAgain(e.target.value);
-  };
+  const changePasswordAgain = (e) => setPasswordAgain(e.target.value);
 
   const onCheckId = (e) => {
     e.preventDefault();
@@ -113,14 +100,8 @@ const JoinMember = () => {
     //   nickname: "test3",
     //   birthday: "2015-07-20",
     // }).then((res) => console.log(res));
-    console.log(`${year} ${month} ${day}`);
 
-    loginTableTest.addData(
-      id,
-      password,
-      nickname,
-      getFormatDate(year, month, day)
-    );
+    loginTableTest.addData(id, password, nickname, getFormatDate(year, month, day));
 
     alert("登録しました。");
     navigate("/login");
@@ -137,12 +118,7 @@ const JoinMember = () => {
         <div className="inputBox">
           <div className="key">ID</div>
           <div className="idBox">
-            <input
-              className="idInput"
-              ref={idInput}
-              value={id}
-              onChange={changeId}
-            />
+            <input className="idInput" ref={idInput} value={id} onChange={changeId} />
             <button className="checkId" onClick={onCheckId}>
               検索
             </button>
@@ -166,10 +142,7 @@ const JoinMember = () => {
             changeDay={changeDay}
           />
         </div>
-        <button
-          className={`joinBtn ${activate ? "" : "noActivate"}`}
-          type="submit"
-        >
+        <button className={`joinBtn ${!activate && "noActivate"}`} type="submit">
           登録する
         </button>
       </form>

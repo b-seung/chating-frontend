@@ -4,11 +4,12 @@ import { useState, useEffect } from "react";
 import { getFormatDate, getFormatTime } from "../modules/common";
 import { chatTableTest, friendsTableTest, loginTableTest } from "../api/test";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { changeModal } from "../modules/header";
 import "../css/Home.scss";
 
 const FriendItem = ({ nickname, openModal, navigate }) => {
   const onClickFriend = () => {
-    openModal(true);
+    openModal();
     navigate(`.?id=${nickname}`);
   };
 
@@ -21,10 +22,8 @@ const FriendItem = ({ nickname, openModal, navigate }) => {
 };
 
 const TalkItem = ({ chat, navigate }) => {
-  const { id, text, datetime } = chat;
-  const date = new Date(datetime);
-
-  const time = new Date(datetime).getTime();
+  const { id, text } = chat;
+  const date = new Date(chat.datetime);
 
   const onClickChat = () => {
     navigate(`/chat?id=${id}`);
@@ -38,18 +37,14 @@ const TalkItem = ({ chat, navigate }) => {
         <div className="text">{text}</div>
       </div>
       <div className="datetime">
-        <div className="date">
-          {getFormatDate(date.getFullYear(), date.getMonth(), date.getDate())}
-        </div>
-        <div className="time">
-          {getFormatTime(date.getHours(), date.getMinutes())}
-        </div>
+        <div className="date">{getFormatDate(date.getFullYear(), date.getMonth(), date.getDate())}</div>
+        <div className="time">{getFormatTime(date.getHours(), date.getMinutes())}</div>
       </div>
     </div>
   );
 };
 
-const Home = ({ loginId, openModal }) => {
+const Home = ({ loginId, changeModal }) => {
   const navigate = useNavigate();
 
   const [openFriends, setOpenFriends] = useState(true);
@@ -61,9 +56,7 @@ const Home = ({ loginId, openModal }) => {
   //   }
   // });
 
-  const friendsList = friendsTableTest.getFriendsList(
-    loginTableTest.test_login_id
-  );
+  const friendsList = friendsTableTest.getFriendsList(loginTableTest.test_login_id);
 
   const chatsList = chatTableTest.getList();
 
@@ -83,18 +76,10 @@ const Home = ({ loginId, openModal }) => {
       </div>
       <div className={`friendsBox ${openFriends ? "" : "hidden"}`}>
         {friendsList.map((friend, index) => (
-          <FriendItem
-            nickname={friend}
-            openModal={openModal}
-            navigate={navigate}
-            key={index}
-          ></FriendItem>
+          <FriendItem nickname={friend} openModal={changeModal} navigate={navigate} key={index}></FriendItem>
         ))}
       </div>
-      <div
-        className={`title ${openFriends ? "chattitle" : ""}`}
-        onClick={openChatsList}
-      >
+      <div className={`title ${openFriends && "chattitle"}`} onClick={openChatsList}>
         <div>チャットリスト</div>
         {openChat ? <MdKeyboardArrowDown /> : <MdKeyboardArrowUp />}
       </div>
@@ -107,4 +92,4 @@ const Home = ({ loginId, openModal }) => {
   );
 };
 
-export default connect(({ login }) => ({ loginId: login.id }))(Home);
+export default connect(({ login }) => ({ loginId: login.id }), { changeModal })(Home);

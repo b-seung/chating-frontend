@@ -13,22 +13,15 @@ const PasswordUpdate = () => {
   const [activate, setActivate] = useState(false);
 
   useEffect(() => {
-    if (nowPassword !== "" && newPassword !== "" && newPasswordAgain !== "")
-      setActivate(true);
+    if (nowPassword !== "" && newPassword !== "" && newPasswordAgain !== "") setActivate(true);
     else setActivate(false);
   }, [nowPassword, newPassword, newPasswordAgain]);
 
-  const onNowChange = (e) => {
-    setNowPassword(e.target.value);
-  };
+  const onNowChange = (e) => setNowPassword(e.target.value);
 
-  const onNewChange = (e) => {
-    setNewPassword(e.target.value);
-  };
+  const onNewChange = (e) => setNewPassword(e.target.value);
 
-  const onNewAgainChange = (e) => {
-    setNewPasswordAgain(e.target.value);
-  };
+  const onNewAgainChange = (e) => setNewPasswordAgain(e.target.value);
 
   const onPreClick = (e) => {
     e.preventDefault();
@@ -67,7 +60,7 @@ const PasswordUpdate = () => {
           <button className="preBtn" onClick={onPreClick}>
             戻る
           </button>
-          <button className={`nextBtn ${activate ? "" : "noActivate"}`}>
+          <button className={`nextBtn ${!activate && "noActivate"}`}>
             <p>次に</p>
             <MdOutlineArrowCircleRight />
           </button>

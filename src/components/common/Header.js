@@ -1,19 +1,21 @@
 import { MdViewHeadline, MdSearch } from "react-icons/md";
 import "../../css/Header.scss";
 import { useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
+import { changeMenu, changeSearch } from "../../modules/header";
 
-const Header = ({ menu, search, onMenu, onSearch }) => {
+const Header = ({ menu, search, changeMenu, changeSearch }) => {
   const navigate = useNavigate();
 
   const onLogoClick = () => {
-    if (menu) onMenu();
-    if (search) onSearch();
+    if (menu) changeMenu();
+    if (search) changeSearch();
     navigate("/");
   };
 
   return (
     <header className="header">
-      <button className="menu" onClick={onMenu}>
+      <button className="menu" onClick={changeMenu}>
         <MdViewHeadline />
       </button>
       <div className="title">
@@ -21,11 +23,17 @@ const Header = ({ menu, search, onMenu, onSearch }) => {
           LOGO
         </p>
       </div>
-      <button className="search" onClick={onSearch}>
+      <button className="search" onClick={changeSearch}>
         <MdSearch />
       </button>
     </header>
   );
 };
 
-export default Header;
+export default connect(
+  ({ header }) => ({
+    menu: header.menu,
+    search: header.search,
+  }),
+  { changeMenu, changeSearch }
+)(Header);

@@ -23,13 +23,9 @@ const LostReset = ({ isOk }) => {
     else setActivate(false);
   }, [password, rePassword]);
 
-  const onPasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+  const onPasswordChange = (e) => setPassword(e.target.value);
 
-  const onRePasswordChange = (e) => {
-    setRePassword(e.target.value);
-  };
+  const onRePasswordChange = (e) => setRePassword(e.target.value);
 
   const onPreClick = (e) => {
     e.preventDefault();
@@ -75,7 +71,7 @@ const LostReset = ({ isOk }) => {
           <button className="preBtn" onClick={onPreClick}>
             戻る
           </button>
-          <button className={`nextBtn ${activate ? "" : "noActivate"}`}>
+          <button className={`nextBtn ${!activate && "noActivate"}`}>
             <p>次に</p>
             <MdOutlineArrowCircleRight />
           </button>

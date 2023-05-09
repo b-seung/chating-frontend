@@ -16,36 +16,19 @@ const LostCheck = ({ setOk }) => {
   const [activate, setActivate] = useState(false);
 
   useEffect(() => {
-    if (
-      year !== "-1" &&
-      month !== "-1" &&
-      day !== "-1" &&
-      id !== "" &&
-      nickname !== ""
-    )
-      setActivate(true);
+    if (year !== "-1" && month !== "-1" && day !== "-1" && id !== "" && nickname !== "") setActivate(true);
     else setActivate(false);
   }, [year, month, day, id, nickname]);
 
-  const changeYear = (e) => {
-    setYear(e.target.value);
-  };
+  const changeYear = (e) => setYear(e.target.value);
 
-  const changeMonth = (e) => {
-    setMonth(e.target.value);
-  };
+  const changeMonth = (e) => setMonth(e.target.value);
 
-  const changeDay = (e) => {
-    setDay(e.target.value);
-  };
+  const changeDay = (e) => setDay(e.target.value);
 
-  const onIdChange = (e) => {
-    setId(e.target.value);
-  };
+  const onIdChange = (e) => setId(e.target.value);
 
-  const onNicknameChange = (e) => {
-    setNickname(e.target.value);
-  };
+  const onNicknameChange = (e) => setNickname(e.target.value);
 
   const onPreClick = (e) => {
     e.preventDefault();
@@ -56,11 +39,7 @@ const LostCheck = ({ setOk }) => {
     e.preventDefault();
     if (!activate) return;
 
-    const user = loginTableTest.findUser(
-      nickname,
-      id,
-      getFormatDate(year, month, day)
-    );
+    const user = loginTableTest.findUser(nickname, id, getFormatDate(year, month, day));
 
     if (user) {
       setOk(true);
@@ -99,7 +78,7 @@ const LostCheck = ({ setOk }) => {
           <button className="preBtn" onClick={onPreClick}>
             戻る
           </button>
-          <button className={`nextBtn ${activate ? "" : "noActivate"}`}>
+          <button className={`nextBtn ${!activate && "noActivate"}`}>
             <p>次に</p>
             <MdOutlineArrowCircleRight />
           </button>

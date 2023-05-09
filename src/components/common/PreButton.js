@@ -13,9 +13,7 @@ const PreButton = () => {
 
   const navigate = useNavigate();
 
-  const onPreBtn = () => {
-    navigate(-1);
-  };
+  const onPreBtn = () => navigate(-1);
 
   return <MdNavigateBefore style={style} onClick={onPreBtn} />;
 };

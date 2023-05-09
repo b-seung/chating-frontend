@@ -10,10 +10,7 @@ const Secession = () => {
   };
 
   const onClick = () => {
-    const password = prompt(
-      "退会をするために現在のパスワードを入力してください。",
-      ""
-    );
+    const password = prompt("退会をするために現在のパスワードを入力してください。", "");
 
     alert("退会しました。ありがとうございました。");
 

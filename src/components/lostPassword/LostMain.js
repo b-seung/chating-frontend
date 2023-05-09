@@ -4,7 +4,7 @@ import LostCheck from "./LostCheck";
 import LostReset from "./LostReset";
 import "../../css/Form.scss";
 
-const LostMain = ({ menu }) => {
+const LostMain = () => {
   const [isOk, setOk] = useState(false);
 
   return (
@@ -14,7 +14,6 @@ const LostMain = ({ menu }) => {
         <Route exact path="/" element={<LostCheck setOk={setOk}></LostCheck>} />
         <Route path="/reset" element={<LostReset isOk={isOk}></LostReset>} />
       </Routes>
-      <div>{menu ? "true" : "false"}</div>
     </div>
   );
 };

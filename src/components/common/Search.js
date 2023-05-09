@@ -3,6 +3,8 @@ import "../../css/Search.scss";
 import { useState, useEffect } from "react";
 import { friendsTableTest } from "../../api/test";
 import { chatTableTest } from "../../api/test";
+import { connect } from "react-redux";
+import { changeSearch } from "../../modules/header";
 
 const FriendItem = ({ friend }) => {
   return (
@@ -25,57 +27,29 @@ const ChatItem = ({ chat }) => {
   );
 };
 
-const Search = ({ search, openSearch }) => {
+const Search = ({ search, changeSearch }) => {
   const [checkValue, setCheckValue] = useState("友達");
   const [searchValue, setSearchValue] = useState("");
 
-  const clickClose = () => {
-    openSearch(false);
-  };
+  const clickChat = (e) => setCheckValue("チャット");
 
-  const clickChat = (e) => {
-    setCheckValue("チャット");
-  };
+  const clickFriend = (e) => setCheckValue("友達");
 
-  const clickFriend = (e) => {
-    setCheckValue("友達");
-  };
+  const onChange = (e) => setSearchValue(e.target.value);
 
-  const onChange = (e) => {
-    setSearchValue(e.target.value);
-  };
-
-  const onClick = (e) => {
-    console.log(e.target);
-    console.log(e.currentTarget);
-  };
   return (
-    <div
-      className={`searchPage ${search ? "open" : "close"}`}
-      onClick={onClick}
-    >
+    <div className={`searchPage ${search ? "open" : "close"}`}>
       <form>
         <div className="topBox">
           <label>
-            <input
-              type="radio"
-              name="type"
-              value="友達"
-              onChange={clickFriend}
-              defaultChecked
-            />
+            <input type="radio" name="type" value="友達" onChange={clickFriend} defaultChecked />
             友達
           </label>
           <label>
-            <input
-              type="radio"
-              name="type"
-              value="チャット"
-              onChange={clickChat}
-            />
+            <input type="radio" name="type" value="チャット" onChange={clickChat} />
             チャット
           </label>
-          <MdClear className="closeBtn" onClick={clickClose} />
+          <MdClear className="closeBtn" onClick={changeSearch} />
         </div>
       </form>
       <div className="midBox">
@@ -100,4 +74,9 @@ const Search = ({ search, openSearch }) => {
   );
 };
 
-export default Search;
+export default connect(
+  ({ header }) => ({
+    search: header.search,
+  }),
+  { changeSearch }
+)(Search);

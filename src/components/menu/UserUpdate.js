@@ -19,39 +19,22 @@ const UserUpdate = () => {
   const [activate, setActivate] = useState(false);
 
   useEffect(() => {
-    if (
-      year !== "-1" &&
-      month !== "-1" &&
-      day !== "-1" &&
-      id !== "" &&
-      nickname !== ""
-    ) {
+    if (year !== "-1" && month !== "-1" && day !== "-1" && id !== "" && nickname !== "") {
       setActivate(true);
     } else {
       setActivate(false);
     }
-    console.log(activate);
   }, [year, month, day, id, nickname]);
 
-  const changeYear = (e) => {
-    setYear(e.target.value);
-  };
+  const changeYear = (e) => setYear(e.target.value);
 
-  const changeMonth = (e) => {
-    setMonth(e.target.value);
-  };
+  const changeMonth = (e) => setMonth(e.target.value);
 
-  const changeDay = (e) => {
-    setDay(e.target.value);
-  };
+  const changeDay = (e) => setDay(e.target.value);
 
-  const onIdChange = (e) => {
-    setId(e.target.value);
-  };
+  const onIdChange = (e) => setId(e.target.value);
 
-  const onNicknameChange = (e) => {
-    setNickname(e.target.value);
-  };
+  const onNicknameChange = (e) => setNickname(e.target.value);
 
   const onPreClick = (e) => {
     e.preventDefault();
@@ -95,7 +78,7 @@ const UserUpdate = () => {
           <button className="preBtn" onClick={onPreClick}>
             戻る
           </button>
-          <button className={`nextBtn ${activate ? "" : "noActivate"}`}>
+          <button className={`nextBtn ${!activate && "noActivate"}`}>
             <p>次に</p>
             <MdOutlineArrowCircleRight />
           </button>
