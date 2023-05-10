@@ -22,13 +22,12 @@ export const getText = (url) => {
   const result = new Promise((resolve, reject) => {
     getRequest(url)
       .then((response) => {
-        console.log(response);
         resolve(response.text());
         // resolve(response.data);
       })
       .catch((e) => reject(e));
   });
-
+  console.log(result);
   return result;
 };
 
@@ -47,10 +46,11 @@ export const getJson = (url) => {
 };
 
 export const postData = (url, data) => {
+  console.log(data);
   const result = new Promise((resolve, reject) => {
     postRequest(url, data)
       .then((response) => {
-        resolve(response.text());
+        resolve(response.json());
       })
       .catch((e) => reject(e));
   });

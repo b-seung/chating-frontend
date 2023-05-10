@@ -19,7 +19,8 @@
     transform: translate(-300px, 0);
   }
 
-  .exitBox {
+  .exitBox,
+  .logoutBox {
     text-align: right;
     padding: 10px;
   }
@@ -38,7 +39,7 @@
     border-bottom: 1px solid;
   }
 
-  .menuBar:nth-last-child(1) {
+  .menuBar:nth-last-child(2) {
     border-bottom: none;
   }
 
@@ -47,6 +48,12 @@
     color: black;
     margin-left: 5px;
     flex-grow: 1;
+  }
+
+  .logoutBox {
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
 }
 

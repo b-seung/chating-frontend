@@ -3,16 +3,15 @@ import { MdVisibility } from "react-icons/md";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import { changeInputId, changeInputPw, changeId } from "../modules/login";
+import { changeInputId, changeInputPw, setLoginState } from "../modules/login";
 import { getText, postData } from "../api/api";
 import "../css/Login.scss";
-import { loginTableTest } from "../api/test";
 
-const Login = ({ loginId, inputId, inputPw, changeInputId, changeInputPw, changeId }) => {
+const Login = ({ loginState, inputId, inputPw, changeInputId, changeInputPw, setLoginState }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (loginId !== null) {
+    if (loginState) {
       if (!alert("既にログインされています。")) {
         navigate("/");
       }
@@ -38,20 +37,20 @@ const Login = ({ loginId, inputId, inputPw, changeInputId, changeInputPw, change
       return;
     }
 
-    // getData("/member/all").then((members) => {
-    //   members.forEach((member) => {
-    //     if (member.id === inputId && member.password === inputPw) {
-    //       sessionStorage.setItem("loginId", inputId);
-    //       changeId(inputId);
-    //       return navigate("/");
-    //     }
-    //   });
-    // });
-
-    getText(`/member/login?id=${inputId}&password=${inputPw}`).then((result) => console.log(result));
+    getText(`/member/login?id=${inputId}&password=${inputPw}`)
+      .then((result) => {
+        if (result === "true") {
+          setLoginState(true);
+          changeInputId("");
+          changeInputPw("");
+          return navigate("/");
+        } else {
+          setLoginError(true);
+        }
+      })
+      .catch(() => alert("ログインに失敗しました。\nもう一度試してください。"));
 
     // postData("/member/login", { id: inputId, password: inputPw }).then((result) => console.log(result));
-    setLoginError(true);
   };
 
   const onReset = (e) => {
@@ -111,9 +110,9 @@ const Login = ({ loginId, inputId, inputPw, changeInputId, changeInputPw, change
 
 export default connect(
   ({ login }) => ({
+    loginState: login.loginState,
     inputId: login.inputId,
     inputPw: login.inputPw,
-    loginId: login.id,
   }),
-  { changeInputId, changeInputPw, changeId }
+  { changeInputId, changeInputPw, setLoginState }
 )(Login);

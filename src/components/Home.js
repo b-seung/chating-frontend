@@ -5,6 +5,7 @@ import { getFormatDate, getFormatTime } from "../modules/common";
 import { chatTableTest, friendsTableTest, loginTableTest } from "../api/test";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { changeModal } from "../modules/header";
+
 import "../css/Home.scss";
 
 const FriendItem = ({ nickname, openModal, navigate }) => {
@@ -44,11 +45,17 @@ const TalkItem = ({ chat, navigate }) => {
   );
 };
 
-const Home = ({ loginId, changeModal }) => {
+const Home = ({ loginState, changeModal }) => {
   const navigate = useNavigate();
 
   const [openFriends, setOpenFriends] = useState(true);
   const [openChat, setOpenChat] = useState(true);
+
+  useEffect(() => {
+    if (!loginState) {
+      if (!alert("ログインからしてください。")) navigate("/login");
+    }
+  }, [navigate]);
 
   // useEffect(() => {
   //   if (loginId === null) {
@@ -92,4 +99,4 @@ const Home = ({ loginId, changeModal }) => {
   );
 };
 
-export default connect(({ login }) => ({ loginId: login.id }), { changeModal })(Home);
+export default connect(({ login }) => ({ loginState: login.loginState }), { changeModal })(Home);

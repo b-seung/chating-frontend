@@ -1,18 +1,16 @@
 import { createAction, handleActions } from "redux-actions";
 
-const CHANGE_ID = "login/CHANGE_ID";
+const LOGIN_STATE = "login/LOGIN_STATE";
 const CHANGE_INPUT_ID = "login/CHANGE_INPUT_ID";
 const CHANGE_INPUT_PW = "login/CHANGE_INPUT_PW";
 
 const initState = {
   inputId: "",
   inputPw: "",
-  id: !sessionStorage.getItem("loginId")
-    ? null
-    : sessionStorage.getItem("loginId"),
+  loginState: false,
 };
 
-export const changeId = createAction(CHANGE_ID, (id) => id);
+export const setLoginState = createAction(LOGIN_STATE, (value) => value);
 export const changeInputId = createAction(CHANGE_INPUT_ID, (text) => text);
 export const changeInputPw = createAction(CHANGE_INPUT_PW, (text) => text);
 
@@ -26,9 +24,9 @@ const login = handleActions(
       ...state,
       inputPw: action.payload,
     }),
-    [CHANGE_ID]: (state, action) => ({
+    [LOGIN_STATE]: (state, action) => ({
       ...state,
-      id: action.payload,
+      loginState: action.payload,
     }),
   },
   initState

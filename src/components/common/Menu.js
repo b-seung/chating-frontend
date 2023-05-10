@@ -8,10 +8,17 @@ import {
 } from "react-icons/md";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { setLoginState } from "../../modules/login";
 import { changeMenu } from "../../modules/header";
+import { getText } from "../../api/api";
 import "../../css/Menu.scss";
 
-const Menu = ({ menu, changeMenu }) => {
+const Menu = ({ menu, changeMenu, setLoginState }) => {
+  const clickLogout = () => {
+    setLoginState(false);
+    getText("/member/logout").then((result) => changeMenu());
+  };
+
   return (
     <div className={`menuPage ${menu ? "open" : "close"}`}>
       <div className="exitBox">
@@ -41,8 +48,18 @@ const Menu = ({ menu, changeMenu }) => {
         <MdOutlineLogin />
         <Link to="/secession">会員退会</Link>
       </div>
+      <div className="logoutBox">
+        <Link to="/login">
+          <div className="logout" onClick={clickLogout}>
+            ログアウト
+          </div>
+        </Link>
+      </div>
     </div>
   );
 };
 
-export default connect(({ header }) => ({ menu: header.menu }), { changeMenu })(Menu);
+export default connect(({ header, login }) => ({ menu: header.menu, loginState: login.loginState }), {
+  changeMenu,
+  setLoginState,
+})(Menu);

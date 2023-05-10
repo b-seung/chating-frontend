@@ -1,8 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import "../css/JoinMember.scss";
-import { postData } from "../api/api";
+import { getText, postData } from "../api/api";
 import { useNavigate } from "react-router-dom";
-import { loginTableTest } from "../api/test";
 import { getFormatDate } from "../modules/common";
 import BirthdayItem from "../components/common/Birthday";
 
@@ -64,15 +63,16 @@ const JoinMember = () => {
       return;
     }
 
-    if (loginTableTest.checkId(id)) {
-      alert("既に使用されているIDです");
-      setId("");
-      idInput.current.focus();
-      return;
-    }
-
-    alert("このIDは利用可能です");
-    setIdCheck(true);
+    getText(`/member/idTest?id=${id}`).then((result) => {
+      if (result === "true") {
+        alert("このIDは利用可能です");
+        setIdCheck(true);
+      } else {
+        alert("既に使用されているIDです");
+        setId("");
+        idInput.current.focus();
+      }
+    });
   };
 
   const onSubmit = (e) => {
@@ -94,17 +94,16 @@ const JoinMember = () => {
       return;
     }
 
-    // postData("/member/post", {
-    //   id: "test3",
-    //   password: "test3",
-    //   nickname: "test3",
-    //   birthday: "2015-07-20",
-    // }).then((res) => console.log(res));
-
-    loginTableTest.addData(id, password, nickname, getFormatDate(year, month, day));
-
-    alert("登録しました。");
-    navigate("/login");
+    postData("/member/join", {
+      id: id,
+      password: password,
+      nickname: nickname,
+      birthday: getFormatDate(year, month, day),
+    }).then((res) => {
+      console.log(res);
+      alert("登録しました。");
+      navigate("/login");
+    });
   };
 
   return (
