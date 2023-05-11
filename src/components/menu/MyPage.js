@@ -1,7 +1,25 @@
 import "../../css/MyPage.scss";
 import PreButton from "../common/PreButton";
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { getJson } from "../../api/api";
+import { changeLoadingState } from "../../modules/loading";
 
-const MyPage = () => {
+const MyPage = ({ changeLoadingState }) => {
+  const [id, setId] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [birthday, setBirthday] = useState("");
+
+  useEffect(() => {
+    changeLoadingState(true);
+    getJson("/member/check").then((result) => {
+      changeLoadingState(false);
+      setId(result["id"]);
+      setNickname(result["nickname"]);
+      setBirthday(result["birthday"]);
+    });
+  }, []);
+
   return (
     <div className="myPage">
       <PreButton />
@@ -10,15 +28,15 @@ const MyPage = () => {
         <div className="seeData">
           <div className="box">
             <div className="subtitle">ログインID</div>
-            <div className="content">id</div>
+            <div className="content">{id}</div>
           </div>
           <div className="box">
             <div className="subtitle">ニックネーム</div>
-            <div className="content">id</div>
+            <div className="content">{nickname}</div>
           </div>
           <div className="box">
             <div className="subtitle">生年月日</div>
-            <div className="content">id</div>
+            <div className="content">{birthday}</div>
           </div>
           <div className="box">
             <div className="subtitle">友達数</div>
@@ -31,4 +49,4 @@ const MyPage = () => {
   );
 };
 
-export default MyPage;
+export default connect(() => ({}), { changeLoadingState })(MyPage);

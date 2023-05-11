@@ -4,13 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { changeMenu, changeSearch } from "../../modules/header";
 
-const Header = ({ menu, search, changeMenu, changeSearch }) => {
+const Header = ({ menu, search, changeMenu, changeSearch, loginState }) => {
   const navigate = useNavigate();
 
   const onLogoClick = () => {
     if (menu) changeMenu();
     if (search) changeSearch();
     navigate("/");
+  };
+
+  const onClickSearch = () => {
+    if (loginState) changeSearch();
+    else alert("ログインからしてください。");
   };
 
   return (
@@ -23,7 +28,7 @@ const Header = ({ menu, search, changeMenu, changeSearch }) => {
           LOGO
         </p>
       </div>
-      <button className="search" onClick={changeSearch}>
+      <button className="search" onClick={onClickSearch}>
         <MdSearch />
       </button>
     </header>
@@ -31,9 +36,10 @@ const Header = ({ menu, search, changeMenu, changeSearch }) => {
 };
 
 export default connect(
-  ({ header }) => ({
+  ({ header, login }) => ({
     menu: header.menu,
     search: header.search,
+    loginState: login.loginState,
   }),
   { changeMenu, changeSearch }
 )(Header);

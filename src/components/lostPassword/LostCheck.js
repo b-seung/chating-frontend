@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { MdOutlineArrowCircleRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { loginTableTest } from "../../api/test";
+import { getText } from "../../api/api";
 import { getFormatDate } from "../../modules/common";
 import BirthdayItem from "../common/Birthday";
+import { connect } from "react-redux";
 
-const LostCheck = ({ setOk }) => {
+const LostCheck = ({ setOk, loadingState, changeLoadingState }) => {
   const navigate = useNavigate();
 
   const [year, setYear] = useState("-1");
@@ -39,14 +40,20 @@ const LostCheck = ({ setOk }) => {
     e.preventDefault();
     if (!activate) return;
 
-    const user = loginTableTest.findUser(nickname, id, getFormatDate(year, month, day));
+    changeLoadingState(true);
 
-    if (user) {
-      setOk(true);
-      navigate(`./reset?id=${id}`);
-    } else {
-      alert("一致するアカウントがありません");
-    }
+    getText(`/member/passwordLost?nickname=${nickname}&id=${id}&birthday=${getFormatDate(year, month, day)}`).then(
+      (result) => {
+        changeLoadingState(false);
+
+        if (result === "true") {
+          setOk(true);
+          navigate(`./reset?id=${id}`);
+        } else {
+          alert("一致するアカウントがありません");
+        }
+      }
+    );
   };
 
   return (

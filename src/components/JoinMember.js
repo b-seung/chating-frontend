@@ -1,11 +1,13 @@
 import { useRef, useState, useEffect } from "react";
+import { connect } from "react-redux";
 import "../css/JoinMember.scss";
 import { getText, postData } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { getFormatDate } from "../modules/common";
 import BirthdayItem from "../components/common/Birthday";
+import { changeLoadingState } from "../modules/loading";
 
-const JoinMember = () => {
+const JoinMember = ({ changeLoadingState }) => {
   const [year, setYear] = useState("-1");
   const [month, setMonth] = useState("-1");
   const [day, setDay] = useState("-1");
@@ -63,7 +65,11 @@ const JoinMember = () => {
       return;
     }
 
+    changeLoadingState(true);
+
     getText(`/member/idTest?id=${id}`).then((result) => {
+      changeLoadingState(false);
+
       if (result === "true") {
         alert("このIDは利用可能です");
         setIdCheck(true);
@@ -93,6 +99,7 @@ const JoinMember = () => {
 
       return;
     }
+    changeLoadingState(true);
 
     postData("/member/join", {
       id: id,
@@ -100,7 +107,7 @@ const JoinMember = () => {
       nickname: nickname,
       birthday: getFormatDate(year, month, day),
     }).then((res) => {
-      console.log(res);
+      changeLoadingState(false);
       alert("登録しました。");
       navigate("/login");
     });
@@ -149,4 +156,4 @@ const JoinMember = () => {
   );
 };
 
-export default JoinMember;
+export default connect(({}) => ({}), { changeLoadingState })(JoinMember);

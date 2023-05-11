@@ -1,4 +1,5 @@
 import "./App.css";
+import { connect } from "react-redux";
 import Header from "./components/common/Header";
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -16,10 +17,12 @@ import FriendModal from "./components/common/FriendModal";
 import FriendManagement from "./components/FriendManagement";
 import Search from "./components/common/Search";
 import Chating from "./components/Chating";
+import Loading from "./components/common/Loading";
 
-const App = () => {
+const App = ({ loadingState }) => {
   return (
     <>
+      {loadingState && <Loading></Loading>}
       <Header></Header>
       <div className="bodyPart">
         <Menu className="menuTop" />
@@ -43,4 +46,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default connect(({ loading }) => ({ loadingState: loading.loadingState }), {})(App);

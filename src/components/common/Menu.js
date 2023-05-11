@@ -13,7 +13,14 @@ import { changeMenu } from "../../modules/header";
 import { getText } from "../../api/api";
 import "../../css/Menu.scss";
 
-const Menu = ({ menu, changeMenu, setLoginState }) => {
+const Menu = ({ menu, changeMenu, loginState, setLoginState }) => {
+  const clickMenu = () => {
+    if (!loginState) {
+      alert("ログインからしてください。");
+    }
+    changeMenu();
+  };
+
   const clickLogout = () => {
     setLoginState(false);
     getText("/member/logout").then((result) => changeMenu());
@@ -24,37 +31,39 @@ const Menu = ({ menu, changeMenu, setLoginState }) => {
       <div className="exitBox">
         <MdClear className="exit" onClick={changeMenu} />
       </div>
-      <div className="menuBar" onClick={changeMenu}>
+      <div className="menuBar" onClick={clickMenu}>
         <MdOutlinePermContactCalendar />
-        <Link to="/mypage">マイページ </Link>
+        <Link to={loginState ? "/mypage" : "/login"}>マイページ </Link>
       </div>
 
-      <div className="menuBar" onClick={changeMenu}>
+      <div className="menuBar" onClick={clickMenu}>
         <MdPersonAddAlt1 />
-        <Link to="/addfriend">友達追加 </Link>
+        <Link to={loginState ? "/addfriend" : "/login"}>友達追加 </Link>
       </div>
 
-      <div className="menuBar" onClick={changeMenu}>
+      <div className="menuBar" onClick={clickMenu}>
         <MdDescription />
-        <Link to="/userupdate">登録情報修正 </Link>
+        <Link to={loginState ? "/userupdate" : "/login"}>登録情報修正 </Link>
       </div>
 
-      <div className="menuBar" onClick={changeMenu}>
+      <div className="menuBar" onClick={clickMenu}>
         <MdKey />
-        <Link to="/pwreset">パスワード再設定</Link>
+        <Link to={loginState ? "/pwreset" : "/login"}>パスワード再設定</Link>
       </div>
 
-      <div className="menuBar" onClick={changeMenu}>
+      <div className="menuBar" onClick={clickMenu}>
         <MdOutlineLogin />
-        <Link to="/secession">会員退会</Link>
+        <Link to={loginState ? "/secession" : "/login"}>会員退会</Link>
       </div>
-      <div className="logoutBox">
-        <Link to="/login">
-          <div className="logout" onClick={clickLogout}>
-            ログアウト
-          </div>
-        </Link>
-      </div>
+      {loginState && (
+        <div className="logoutBox">
+          <Link to="/login">
+            <div className="logout" onClick={clickLogout}>
+              ログアウト
+            </div>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

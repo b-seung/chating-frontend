@@ -56,3 +56,15 @@ export const postData = (url, data) => {
   });
   return result;
 };
+
+export const postText = (url, data) => {
+  console.log(data);
+  const result = new Promise((resolve, reject) => {
+    postRequest(url, data)
+      .then((response) => {
+        resolve(response.text());
+      })
+      .catch((e) => reject(e));
+  });
+  return result;
+};

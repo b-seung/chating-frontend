@@ -3,20 +3,32 @@ import { MdVisibility } from "react-icons/md";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import { changeInputId, changeInputPw, setLoginState } from "../modules/login";
+import { changeInputId, changeInputPw, setLoginState, resetInput } from "../modules/login";
+import { changeLoadingState } from "../modules/loading";
+
 import { getText, postData } from "../api/api";
 import "../css/Login.scss";
 
-const Login = ({ loginState, inputId, inputPw, changeInputId, changeInputPw, setLoginState }) => {
+const Login = ({
+  loginState,
+  inputId,
+  inputPw,
+  changeInputId,
+  changeInputPw,
+  setLoginState,
+  resetInput,
+  changeLoadingState,
+}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    resetInput();
     if (loginState) {
       if (!alert("既にログインされています。")) {
         navigate("/");
       }
     }
-  }, [navigate]);
+  }, []);
 
   const [loginError, setLoginError] = useState(false);
 
@@ -37,8 +49,10 @@ const Login = ({ loginState, inputId, inputPw, changeInputId, changeInputPw, set
       return;
     }
 
+    changeLoadingState(true);
     getText(`/member/login?id=${inputId}&password=${inputPw}`)
       .then((result) => {
+        changeLoadingState(false);
         if (result === "true") {
           setLoginState(true);
           changeInputId("");
@@ -114,5 +128,5 @@ export default connect(
     inputId: login.inputId,
     inputPw: login.inputPw,
   }),
-  { changeInputId, changeInputPw, setLoginState }
+  { changeInputId, changeInputPw, setLoginState, resetInput, changeLoadingState }
 )(Login);

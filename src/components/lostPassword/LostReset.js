@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { MdOutlineArrowCircleRight } from "react-icons/md";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { loginTableTest } from "../../api/test";
+import { postText } from "../../api/api";
 
-const LostReset = ({ isOk }) => {
+const LostReset = ({ isOk, changeLoadingState }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -46,10 +46,17 @@ const LostReset = ({ isOk }) => {
       return;
     }
 
-    loginTableTest.resetPassword(searchParams.get("id"), password);
-    alert("パスワードの変更が完了しました。");
-
-    navigate("/login");
+    changeLoadingState(true);
+    postText("/member/passwordReset", { id: searchParams.get("id"), password: password })
+      .then((result) => {
+        changeLoadingState(false);
+        alert("パスワードの変更が完了しました。");
+        navigate("/login");
+      })
+      .catch(() => {
+        changeLoadingState(false);
+        alert("パスワード変更を処理するときにエらーが発生しました。\nもう一度試してください。");
+      });
   };
 
   return (
