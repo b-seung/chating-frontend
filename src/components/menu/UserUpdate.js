@@ -1,15 +1,20 @@
 import PreButton from "../common/PreButton";
 import { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import { MdOutlineArrowCircleRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { changeLoadingState } from "../../modules/loading";
+import { getFormatDate } from "../../modules/common";
+import { getJson, getText, postText } from "../../api/api";
 import "../../css/Form.scss";
 
 import BirthdayItem from "../common/Birthday";
 
-const UserUpdate = () => {
+const UserUpdate = ({ changeLoadingState }) => {
   const navigate = useNavigate();
 
   const [id, setId] = useState("");
+  const [nowId, setNowId] = useState("");
   const [nickname, setNickname] = useState("");
 
   const [year, setYear] = useState("-1");
@@ -17,6 +22,28 @@ const UserUpdate = () => {
   const [day, setDay] = useState("-1");
 
   const [activate, setActivate] = useState(false);
+  const [idCheck, setIdCheck] = useState(false);
+
+  useEffect(() => {
+    changeLoadingState(true);
+    getJson("/member/check")
+      .then((result) => {
+        changeLoadingState(false);
+        setId(result["id"]);
+        setNowId(result["id"]);
+        setNickname(result["nickname"]);
+
+        const birthday = new Date(result["birthday"]);
+        setYear(birthday.getFullYear());
+        setMonth(birthday.getMonth() + 1);
+        setDay(birthday.getDate());
+      })
+      .catch((reason) => {
+        changeLoadingState(false);
+        alert("エラーが発生しました。\nログイン画面に戻ります。");
+        navigate("/login");
+      });
+  }, []);
 
   useEffect(() => {
     if (year !== "-1" && month !== "-1" && day !== "-1" && id !== "" && nickname !== "") {
@@ -41,10 +68,54 @@ const UserUpdate = () => {
     navigate(-1);
   };
 
+  const onCheckId = (e) => {
+    e.preventDefault();
+
+    if (id === "") {
+      alert("IDを入力してください。");
+      return;
+    }
+
+    if (id === nowId) {
+      alert("このIDは利用可能です");
+      setIdCheck(true);
+      return;
+    }
+
+    changeLoadingState(true);
+
+    getText(`/member/idTest?id=${id}`).then((result) => {
+      changeLoadingState(false);
+
+      if (result === "true") {
+        alert("このIDは利用可能です");
+        setIdCheck(true);
+      } else {
+        alert("既に使用されているIDです");
+        setId("");
+      }
+    });
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
     if (!activate) return;
-    console.log(`${id} ${nickname} ${year} ${month} ${day}`);
+
+    if (!idCheck) {
+      alert("「検査」ボタンをクリックしてください。");
+      return;
+    }
+
+    postText("/member/update", {
+      originId: nowId,
+      id: id,
+      nickname: nickname,
+      birthday: getFormatDate(year, month, day),
+    }).then((res) => {
+      changeLoadingState(false);
+      alert("変更しました。");
+      navigate("/");
+    });
   };
 
   return (
@@ -58,11 +129,14 @@ const UserUpdate = () => {
       <form onSubmit={onSubmit}>
         <div className="inputBox">
           <div className="key">ログインID</div>
-          <input onChange={onIdChange} />
+          <input onChange={onIdChange} value={id} />
+          <button className="checkId" onClick={onCheckId}>
+            検索
+          </button>
         </div>
         <div className="inputBox">
           <div className="key">ニックネーム</div>
-          <input onChange={onNicknameChange} />
+          <input onChange={onNicknameChange} value={nickname} />
         </div>
         <div className="inputBox">
           <BirthdayItem
@@ -79,7 +153,7 @@ const UserUpdate = () => {
             戻る
           </button>
           <button className={`nextBtn ${!activate && "noActivate"}`}>
-            <p>次に</p>
+            <p>変更</p>
             <MdOutlineArrowCircleRight />
           </button>
         </div>
@@ -88,4 +162,4 @@ const UserUpdate = () => {
   );
 };
 
-export default UserUpdate;
+export default connect(({}) => ({}), { changeLoadingState })(UserUpdate);

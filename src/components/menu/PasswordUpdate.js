@@ -1,15 +1,19 @@
 import PreButton from "../common/PreButton";
 import { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import { MdOutlineArrowCircleRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { changeLoadingState } from "../../modules/loading";
+import { setLoginState } from "../../modules/login";
+import { getJson, postText } from "../../api/api";
 import "../../css/Form.scss";
 
-const PasswordUpdate = () => {
+const PasswordUpdate = ({ setLoginState, changeLoadingState }) => {
   const navigate = useNavigate();
 
   const [nowPassword, setNowPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [newPasswordAgain, setNewPasswordAgain] = useState(false);
+  const [newPasswordAgain, setNewPasswordAgain] = useState("");
   const [activate, setActivate] = useState(false);
 
   useEffect(() => {
@@ -30,8 +34,38 @@ const PasswordUpdate = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    alert("パスワードを再設定しました。\n再ログインしてください。");
-    navigate("/login");
+
+    if (newPassword !== newPasswordAgain) {
+      alert("入力されたパスワードが一致しません。\n確認してもう一度入力してください。");
+      return;
+    }
+
+    changeLoadingState(true);
+
+    getJson("/member/check").then((result) => {
+      if (nowPassword !== result["password"]) {
+        alert("現在のパスワードが間違っています。\n確認してもう一度入力してください。");
+        setNowPassword("");
+        changeLoadingState(false);
+        return;
+      }
+    });
+
+    getJson("/member/check")
+      .then((result) => {
+        postText("/member/passwordReset", { id: result["id"], password: newPassword }).then((result) => {
+          setLoginState(false);
+          changeLoadingState(false);
+          alert("パスワードを再設定しました。\n再ログインしてください。");
+          navigate("/login");
+        });
+      })
+      .catch(() => {
+        changeLoadingState(false);
+        setLoginState(false);
+        alert("エラーが発生しました。\nログイン画面に戻ります。");
+        navigate("/login");
+      });
   };
 
   return (
@@ -46,15 +80,15 @@ const PasswordUpdate = () => {
       <form onSubmit={onSubmit}>
         <div className="inputBox">
           <div className="key">現在のパスワード</div>
-          <input onChange={onNowChange} />
+          <input onChange={onNowChange} value={nowPassword} />
         </div>
         <div className="inputBox">
           <div className="key">新しいパスワード</div>
-          <input onChange={onNewChange} />
+          <input type="password" onChange={onNewChange} value={newPassword} />
         </div>
         <div className="inputBox">
           <div className="key">新しいパスワード（確認）</div>
-          <input onChange={onNewAgainChange} />
+          <input type="password" onChange={onNewAgainChange} value={newPasswordAgain} />
         </div>
         <div className="btnBox">
           <button className="preBtn" onClick={onPreClick}>
@@ -70,4 +104,4 @@ const PasswordUpdate = () => {
   );
 };
 
-export default PasswordUpdate;
+export default connect(({}) => ({}), { changeLoadingState, setLoginState })(PasswordUpdate);

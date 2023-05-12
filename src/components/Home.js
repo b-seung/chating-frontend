@@ -2,6 +2,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
 import { getFormatDate, getFormatTime } from "../modules/common";
+import { getJson } from "../api/api";
 import { chatTableTest, friendsTableTest, loginTableTest } from "../api/test";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { changeModal } from "../modules/header";
@@ -51,6 +52,8 @@ const Home = ({ loginState, changeModal }) => {
   const [openFriends, setOpenFriends] = useState(true);
   const [openChat, setOpenChat] = useState(true);
 
+  const [friends, setFriends] = useState(new Array());
+
   useEffect(() => {
     if (!loginState) {
       if (!alert("ログインからしてください。")) navigate("/login");
@@ -63,7 +66,7 @@ const Home = ({ loginState, changeModal }) => {
   //   }
   // });
 
-  const friendsList = friendsTableTest.getFriendsList(loginTableTest.test_login_id);
+  getJson("/friend/friends").then((result) => setFriends(result));
 
   const chatsList = chatTableTest.getList();
 
@@ -82,7 +85,7 @@ const Home = ({ loginState, changeModal }) => {
         {openFriends ? <MdKeyboardArrowDown /> : <MdKeyboardArrowUp />}
       </div>
       <div className={`friendsBox ${openFriends ? "" : "hidden"}`}>
-        {friendsList.map((friend, index) => (
+        {friends.map((friend, index) => (
           <FriendItem nickname={friend} openModal={changeModal} navigate={navigate} key={index}></FriendItem>
         ))}
       </div>
