@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { changeInputId, changeInputPw, setLoginState, resetInput } from "../modules/login";
 import { changeLoadingState } from "../modules/loading";
 
-import { getText, postData } from "../api/api";
+import { getText, getJson, postData } from "../api/api";
 import "../css/Login.scss";
 
 const Login = ({
@@ -23,11 +23,11 @@ const Login = ({
 
   useEffect(() => {
     resetInput();
-    if (loginState) {
-      if (!alert("既にログインされています。")) {
+    getJson("/member/check").then((result) => {
+      if (!result["error"] && !alert("既にログインされています。")) {
         navigate("/");
       }
-    }
+    });
   }, []);
 
   const [loginError, setLoginError] = useState(false);

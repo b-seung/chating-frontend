@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { getJson } from "../../api/api";
 import { changeLoadingState } from "../../modules/loading";
+import { isError } from "../../modules/common";
+import { useNavigate } from "react-router-dom";
 
 const MyPage = ({ changeLoadingState }) => {
+  const navigate = useNavigate();
+
   const [id, setId] = useState("");
   const [nickname, setNickname] = useState("");
   const [birthday, setBirthday] = useState("");
@@ -14,6 +18,9 @@ const MyPage = ({ changeLoadingState }) => {
     changeLoadingState(true);
     getJson("/member/check").then((result) => {
       changeLoadingState(false);
+
+      isError(navigate, result["error"]);
+
       setId(result["id"]);
       setNickname(result["nickname"]);
       setBirthday(result["birthday"]);

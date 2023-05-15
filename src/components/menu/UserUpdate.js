@@ -26,23 +26,24 @@ const UserUpdate = ({ changeLoadingState }) => {
 
   useEffect(() => {
     changeLoadingState(true);
-    getJson("/member/check")
-      .then((result) => {
-        changeLoadingState(false);
-        setId(result["id"]);
-        setNowId(result["id"]);
-        setNickname(result["nickname"]);
-
-        const birthday = new Date(result["birthday"]);
-        setYear(birthday.getFullYear());
-        setMonth(birthday.getMonth() + 1);
-        setDay(birthday.getDate());
-      })
-      .catch((reason) => {
-        changeLoadingState(false);
+    getJson("/member/check").then((result) => {
+      changeLoadingState(false);
+      
+      if (result["error"]) {
         alert("エラーが発生しました。\nログイン画面に戻ります。");
         navigate("/login");
-      });
+      }
+
+      changeLoadingState(false);
+      setId(result["id"]);
+      setNowId(result["id"]);
+      setNickname(result["nickname"]);
+
+      const birthday = new Date(result["birthday"]);
+      setYear(birthday.getFullYear());
+      setMonth(birthday.getMonth() + 1);
+      setDay(birthday.getDate());
+    });
   }, []);
 
   useEffect(() => {

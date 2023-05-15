@@ -3,9 +3,21 @@ import "../../css/Header.scss";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { changeMenu, changeSearch } from "../../modules/header";
+import { setLoginState } from "../../modules/login";
+import { isError } from "../../modules/common";
+import { getJson } from "../../api/api";
 
-const Header = ({ menu, search, changeMenu, changeSearch, loginState }) => {
+const Header = ({ menu, search, changeMenu, changeSearch, setLoginState }) => {
   const navigate = useNavigate();
+
+  const onClickMenu = () => {
+    if (!menu) {
+      getJson("/member/check").then((result) => {
+        if (!result["error"]) setLoginState(true);
+      });
+    }
+    changeMenu();
+  };
 
   const onLogoClick = () => {
     if (menu) changeMenu();
@@ -14,13 +26,15 @@ const Header = ({ menu, search, changeMenu, changeSearch, loginState }) => {
   };
 
   const onClickSearch = () => {
-    if (loginState) changeSearch();
-    else alert("ログインからしてください。");
+    getJson("/member/check").then((result) => {
+      isError(navigate, result["error"]);
+      changeSearch();
+    });
   };
 
   return (
     <header className="header">
-      <button className="menu" onClick={changeMenu}>
+      <button className="menu" onClick={onClickMenu}>
         <MdViewHeadline />
       </button>
       <div className="title">
@@ -39,7 +53,6 @@ export default connect(
   ({ header, login }) => ({
     menu: header.menu,
     search: header.search,
-    loginState: login.loginState,
   }),
-  { changeMenu, changeSearch }
+  { changeMenu, changeSearch, setLoginState }
 )(Header);

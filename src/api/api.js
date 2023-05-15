@@ -35,7 +35,6 @@ export const getJson = (url) => {
   const result = new Promise((resolve, reject) => {
     getRequest(url)
       .then((response) => {
-        console.log(response);
         resolve(response.json());
         // resolve(response.data);
       })

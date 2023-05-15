@@ -55,10 +55,26 @@ const Home = ({ loginState, changeModal }) => {
   const [friends, setFriends] = useState(new Array());
 
   useEffect(() => {
-    if (!loginState) {
-      if (!alert("ログインからしてください。")) navigate("/login");
-    }
-  }, [navigate]);
+    getJson("/member/check").then((result) => {
+      console.log(result);
+      if (result["error"]) {
+        alert("ログインからしてください。");
+        navigate("/login");
+        return;
+      }
+      getJson("/friend")
+        .then((result) => {
+          setFriends(result);
+        })
+        .catch((reason) => {
+          console.log(reason);
+          alert("エラーが発生しました。\nログイン画面に戻ります。");
+          navigate("/login");
+        });
+    });
+  }, []);
+
+  useEffect(() => {}, []);
 
   // useEffect(() => {
   //   if (loginId === null) {
@@ -66,7 +82,7 @@ const Home = ({ loginState, changeModal }) => {
   //   }
   // });
 
-  getJson("/friend/friends").then((result) => setFriends(result));
+  // getJson("/friend/friends").then((result) => setFriends(result));
 
   const chatsList = chatTableTest.getList();
 
@@ -85,6 +101,7 @@ const Home = ({ loginState, changeModal }) => {
         {openFriends ? <MdKeyboardArrowDown /> : <MdKeyboardArrowUp />}
       </div>
       <div className={`friendsBox ${openFriends ? "" : "hidden"}`}>
+        {friends.length === 0 && <div className="noFriend">ーーーーーなしーーーーー</div>}
         {friends.map((friend, index) => (
           <FriendItem nickname={friend} openModal={changeModal} navigate={navigate} key={index}></FriendItem>
         ))}

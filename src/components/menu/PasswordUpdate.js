@@ -7,6 +7,7 @@ import { changeLoadingState } from "../../modules/loading";
 import { setLoginState } from "../../modules/login";
 import { getJson, postText } from "../../api/api";
 import "../../css/Form.scss";
+import { isError } from "../../modules/common";
 
 const PasswordUpdate = ({ setLoginState, changeLoadingState }) => {
   const navigate = useNavigate();
@@ -43,29 +44,21 @@ const PasswordUpdate = ({ setLoginState, changeLoadingState }) => {
     changeLoadingState(true);
 
     getJson("/member/check").then((result) => {
+      isError(navigate, result["error"]);
+
       if (nowPassword !== result["password"]) {
         alert("現在のパスワードが間違っています。\n確認してもう一度入力してください。");
         setNowPassword("");
         changeLoadingState(false);
         return;
       }
-    });
 
-    getJson("/member/check")
-      .then((result) => {
-        postText("/member/passwordReset", { id: result["id"], password: newPassword }).then((result) => {
-          setLoginState(false);
-          changeLoadingState(false);
-          alert("パスワードを再設定しました。\n再ログインしてください。");
-          navigate("/login");
-        });
-      })
-      .catch(() => {
+      postText("/member/passwordReset", { id: result["id"], password: newPassword }).then((result) => {
         changeLoadingState(false);
-        setLoginState(false);
-        alert("エラーが発生しました。\nログイン画面に戻ります。");
+        alert("パスワードを再設定しました。\n再ログインしてください。");
         navigate("/login");
       });
+    });
   };
 
   return (

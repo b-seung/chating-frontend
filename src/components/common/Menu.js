@@ -7,16 +7,20 @@ import {
   MdOutlineLogin,
 } from "react-icons/md";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { setLoginState } from "../../modules/login";
 import { changeMenu } from "../../modules/header";
-import { getText } from "../../api/api";
+import { getJson, getText } from "../../api/api";
 import "../../css/Menu.scss";
+import { useEffect } from "react";
 
 const Menu = ({ menu, changeMenu, loginState, setLoginState }) => {
+  const navigate = useNavigate();
+
   const clickMenu = () => {
     if (!loginState) {
       alert("ログインからしてください。");
+      navigate("/login");
     }
     changeMenu();
   };
