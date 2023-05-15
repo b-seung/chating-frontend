@@ -1,8 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import PreButton from "../common/PreButton";
 import "../../css/AddFriend.scss";
+import { getJson } from "../../api/api";
 import { friendsTableTest, loginTableTest } from "../../api/test";
 import ChatOrManage from "../common/ChatOrManage";
+import { isError } from "../../modules/common";
+import { useNavigate } from "react-router-dom";
 
 const Failed = () => {
   return (
@@ -59,16 +62,34 @@ const AddedFriend = ({ data }) => {
 };
 
 const AddFriend = () => {
+  const navigate = useNavigate();
+
+  const [myId, setMyId] = useState("");
   const [isSearched, setIsSearched] = useState(false);
+  const [myFirendList, setMyFriendList] = useState(null);
+  const [addedMe, setAddedMe] = useState(null); //知り合いかもList
   const [searchResult, setSearchResult] = useState(null);
   const [searchFriend, setSearchFriend] = useState(null);
 
   const searchId = useRef(null);
-  const isFriends = friendsTableTest.isFriends("test1");
+
+  useEffect(() => {
+    getJson("/member/check").then((result) => {
+      isError(navigate, result["error"]);
+      setMyId(result["id"]);
+    });
+
+    getJson("");
+    getJson("/friend/addedMe").then((result) => {
+      isError(navigate, result["error"]);
+      setAddedMe(result);
+    });
+  }, []);
 
   const onSearch = () => {
     if (!isSearched) setIsSearched(true);
 
+    getJson();
     setSearchResult(loginTableTest.checkId(searchId.current.value));
     setSearchFriend({
       id: searchId.current.value,
@@ -86,13 +107,15 @@ const AddFriend = () => {
           検索
         </button>
       </div>
-      {isSearched && (searchResult ? <Successed friend={searchFriend} isAdd={false}></Successed> : <Failed></Failed>)}
+      {isSearched &&
+        (searchResult ? <Successed myId={myId} friend={searchFriend} isAdd={false}></Successed> : <Failed></Failed>)}
       <div className="addBox">
         <div className="addTitle">知り合いかも</div>
         <div className="addList">
-          {isFriends.map((data) => {
-            return <AddedFriend data={data} key={data.id}></AddedFriend>;
-          })}
+          {addedMe !== null &&
+            addedMe.map((data) => {
+              return <AddedFriend data={data} key={data}></AddedFriend>;
+            })}
         </div>
       </div>
     </div>
