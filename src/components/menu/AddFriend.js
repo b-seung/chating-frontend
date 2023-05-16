@@ -1,11 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { connect } from "react-redux";
 import PreButton from "../common/PreButton";
 import "../../css/AddFriend.scss";
-import { getJson } from "../../api/api";
-import { friendsTableTest, loginTableTest } from "../../api/test";
+import { getJson, postData } from "../../api/api";
 import ChatOrManage from "../common/ChatOrManage";
 import { isError } from "../../modules/common";
 import { useNavigate } from "react-router-dom";
+import { setMyList, addMyList, removeMyList, setAddedList, setIsMe, setIsAdded } from "../../modules/addFriend";
 
 const Failed = () => {
   return (
@@ -16,33 +17,56 @@ const Failed = () => {
   );
 };
 
-const Successed = ({ friend, isAdd }) => {
-  const [isAdded, setIsAdded] = useState(isAdd);
-
+const Successed = ({ friend, isMe, isAdded, setIsAdded, onAdd }) => {
   const onAddClick = () => {
-    setIsAdded(true);
+    const result = onAdd(friend);
+
+    if (result) {
+      setIsAdded(true);
+    } else {
+      alert("エラーが発生しました。\nもう一度やり直してください。");
+    }
+    onAdd(friend);
   };
+
   return (
     <div className="successItem">
       <div className="image"></div>
       <div className="name">{friend.nickname}</div>
-      {isAdded ? (
-        <ChatOrManage id={friend.id}></ChatOrManage>
-      ) : (
-        <button className="addBtn" onClick={onAddClick}>
-          追加する
-        </button>
-      )}
+      {!isMe &&
+        (isAdded ? (
+          <ChatOrManage id={friend.id}></ChatOrManage>
+        ) : (
+          <button className="addBtn" onClick={() => onAddClick()}>
+            追加する
+          </button>
+        ))}
     </div>
   );
 };
 
-const AddedFriend = ({ data }) => {
+const AddedFriend = ({ data, onAdd, onDelete }) => {
   const [isAdd, setIsAdd] = useState(false);
 
-  const onAddClick = () => setIsAdd(true);
+  const onAddClick = () => {
+    const result = onAdd(data);
 
-  const onCancelClick = () => setIsAdd(false);
+    if (result) {
+      setIsAdd(true);
+    } else {
+      alert("エラーが発生しました。\nもう一度やり直してください。");
+    }
+  };
+
+  const onCancelClick = () => {
+    const result = onDelete(data);
+
+    if (result) {
+      setIsAdd(false);
+    } else {
+      alert("エラーが発生しました。\nもう一度やり直してください。");
+    }
+  };
 
   return (
     <div className="addedItem">
@@ -61,39 +85,80 @@ const AddedFriend = ({ data }) => {
   );
 };
 
-const AddFriend = () => {
+const AddFriend = ({
+  myFriendList,
+  addedMeList,
+  isMe,
+  isAdded,
+  setMyList,
+  addMyList,
+  removeMyList,
+  setAddedList,
+  setIsMe,
+  setIsAdded,
+}) => {
   const navigate = useNavigate();
 
-  const [myId, setMyId] = useState("");
   const [isSearched, setIsSearched] = useState(false);
-  const [myFirendList, setMyFriendList] = useState(null);
-  const [addedMe, setAddedMe] = useState(null); //知り合いかもList
-  const [searchResult, setSearchResult] = useState(null);
-  const [searchFriend, setSearchFriend] = useState(null);
-
+  const [searchFriend, setSearchFriend] = useState({ id: null, nickname: null });
   const searchId = useRef(null);
 
   useEffect(() => {
-    getJson("/member/check").then((result) => {
+    getJson(`/friend/friendsList`).then((result) => {
       isError(navigate, result["error"]);
-      setMyId(result["id"]);
-    });
-
-    getJson("");
-    getJson("/friend/addedMe").then((result) => {
-      isError(navigate, result["error"]);
-      setAddedMe(result);
+      console.log(result);
+      setAddedList(result["addedList"]);
+      setMyList(result["myFriendList"]);
     });
   }, []);
 
-  const onSearch = () => {
-    if (!isSearched) setIsSearched(true);
+  const onAddFriend = useCallback(
+    (data) => {
+      const result = postData("/friend/addFriend", { id: data.id }).then((result) => {
+        if (result["error"]) return false;
+        addMyList(data);
+        if (searchFriend.id === data.id) setIsAdded(true);
+        return true;
+      });
 
-    getJson();
-    setSearchResult(loginTableTest.checkId(searchId.current.value));
-    setSearchFriend({
-      id: searchId.current.value,
-      nickname: searchId.current.value,
+      return result;
+    },
+    [searchFriend]
+  );
+
+  const onDeleteFriend = useCallback(
+    (data) => {
+      const result = postData("/friend/deleteFriend", { id: data.id }).then((result) => {
+        if (result["error"]) return false;
+        removeMyList(data);
+        if (searchFriend.id === data.id) setIsAdded(false);
+        return true;
+      });
+      return result;
+    },
+    [searchFriend]
+  );
+
+  const onSearch = (e) => {
+    e.preventDefault();
+
+    if (!isSearched) setIsSearched(true);
+    if (isAdded) setIsAdded(false);
+
+    getJson(`/member/searchId?id=${searchId.current.value}`).then((result) => {
+      console.log(result);
+      setIsMe(result["isMyId"]);
+      setSearchFriend({
+        id: result["id"],
+        nickname: result["nickname"],
+      });
+
+      for (let list of myFriendList) {
+        if (list["id"] === result["id"]) {
+          setIsAdded(true);
+          break;
+        }
+      }
     });
   };
 
@@ -101,20 +166,30 @@ const AddFriend = () => {
     <div className="addFriendPage">
       <PreButton />
       <div className="title">友達追加</div>
-      <div className="searchBox">
+      <form className="searchBox" onSubmit={onSearch}>
         <input ref={searchId} placeholder="IDを入力してください。" />
-        <button className="searchBtn" onClick={onSearch}>
+        <button className="searchBtn" type="submit">
           検索
         </button>
-      </div>
+      </form>
       {isSearched &&
-        (searchResult ? <Successed myId={myId} friend={searchFriend} isAdd={false}></Successed> : <Failed></Failed>)}
+        (searchFriend["id"] !== null ? (
+          <Successed
+            friend={searchFriend}
+            isMe={isMe}
+            isAdded={isAdded}
+            setIsAdded={setIsAdded}
+            onAdd={onAddFriend}
+          ></Successed>
+        ) : (
+          <Failed></Failed>
+        ))}
       <div className="addBox">
         <div className="addTitle">知り合いかも</div>
         <div className="addList">
-          {addedMe !== null &&
-            addedMe.map((data) => {
-              return <AddedFriend data={data} key={data}></AddedFriend>;
+          {addedMeList !== null &&
+            addedMeList.map((data, index) => {
+              return <AddedFriend data={data} key={index} onAdd={onAddFriend} onDelete={onDeleteFriend}></AddedFriend>;
             })}
         </div>
       </div>
@@ -122,4 +197,12 @@ const AddFriend = () => {
   );
 };
 
-export default AddFriend;
+export default connect(
+  ({ addFriend }) => ({
+    myFriendList: addFriend.myFriendList,
+    addedMeList: addFriend.addedMeList,
+    isMe: addFriend.isMe,
+    isAdded: addFriend.isAdded,
+  }),
+  { setMyList, addMyList, removeMyList, setAddedList, setIsMe, setIsAdded }
+)(AddFriend);

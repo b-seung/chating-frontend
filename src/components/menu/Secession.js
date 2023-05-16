@@ -1,4 +1,5 @@
 import PreButton from "../common/PreButton";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../css/Form.scss";
 
@@ -8,6 +9,19 @@ const Secession = () => {
   const onPreClick = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    changeLoadingState(true);
+    getJson("/member/check").then((result) => {
+      changeLoadingState(false);
+
+      isError(navigate, result["error"]);
+
+      setId(result["id"]);
+      setNickname(result["nickname"]);
+      setBirthday(result["birthday"]);
+    });
+  }, []);
 
   const onClick = () => {
     const password = prompt("退会をするために現在のパスワードを入力してください。", "");

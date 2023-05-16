@@ -1,10 +1,26 @@
+import { useCallback } from "react";
 import PreButton from "./common/PreButton";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { postData } from "../api/api";
 import "../css/Manage.scss";
 
 const FriendManagement = () => {
+  const navigate = useNavigate();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const id = searchParams.get("id");
+
+  const onDeleteFriend = useCallback((id) => {
+    postData("/friend/deleteFriend", { id: id })
+      .then((result) => {
+        if (result["error"]) return false;
+        return true;
+      })
+      .then((result) => {
+        if (result) navigate("/");
+        else alert("エラーが発生しました。\nもう一度やり直してください。");
+      });
+  }, []);
 
   return (
     <div className="managePage">
@@ -13,7 +29,9 @@ const FriendManagement = () => {
       <div className="name">{id}</div>
       <div className="menuBox">
         <div className="menu deleteHistory">チャット履歴を削除する。</div>
-        <div className="menu deleteFriend"> 友達を削除する。</div>
+        <div className="menu deleteFriend" onClick={() => onDeleteFriend(id)}>
+          友達を削除する。
+        </div>
       </div>
     </div>
   );

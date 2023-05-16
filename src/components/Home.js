@@ -9,16 +9,16 @@ import { changeModal } from "../modules/header";
 
 import "../css/Home.scss";
 
-const FriendItem = ({ nickname, openModal, navigate }) => {
+const FriendItem = ({ id, openModal, navigate }) => {
   const onClickFriend = () => {
     openModal();
-    navigate(`.?id=${nickname}`);
+    navigate(`.?id=${id}`);
   };
 
   return (
     <div className="friendItem" onClick={onClickFriend}>
       <div className="image"></div>
-      <div className="name">{nickname}</div>
+      <div className="name">{id}</div>
     </div>
   );
 };
@@ -55,23 +55,24 @@ const Home = ({ loginState, changeModal }) => {
   const [friends, setFriends] = useState(new Array());
 
   useEffect(() => {
-    getJson("/member/check").then((result) => {
-      console.log(result);
-      if (result["error"]) {
-        alert("ログインからしてください。");
-        navigate("/login");
-        return;
-      }
-      getJson("/friend")
-        .then((result) => {
-          setFriends(result);
-        })
-        .catch((reason) => {
-          console.log(reason);
-          alert("エラーが発生しました。\nログイン画面に戻ります。");
+    getJson("/member/check")
+      .then((result) => {
+        console.log(result);
+        if (result["error"]) {
+          alert("ログインからしてください。");
           navigate("/login");
-        });
-    });
+        }
+      })
+      .then(() => {
+        getJson("/friend")
+          .then((result) => {
+            setFriends(result);
+          })
+          .catch((reason) => {
+            alert("エラーが発生しました。\nログイン画面に戻ります。");
+            navigate("/login");
+          });
+      });
   }, []);
 
   useEffect(() => {}, []);
@@ -102,8 +103,8 @@ const Home = ({ loginState, changeModal }) => {
       </div>
       <div className={`friendsBox ${openFriends ? "" : "hidden"}`}>
         {friends.length === 0 && <div className="noFriend">ーーーーーなしーーーーー</div>}
-        {friends.map((friend, index) => (
-          <FriendItem nickname={friend} openModal={changeModal} navigate={navigate} key={index}></FriendItem>
+        {friends.map((id, index) => (
+          <FriendItem id={id} openModal={changeModal} navigate={navigate} key={index}></FriendItem>
         ))}
       </div>
       <div className={`title ${openFriends && "chattitle"}`} onClick={openChatsList}>

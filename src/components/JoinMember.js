@@ -67,7 +67,7 @@ const JoinMember = ({ changeLoadingState }) => {
 
     changeLoadingState(true);
 
-    getText(`/member/idTest?id=${id}`).then((result) => {
+    getText(`/member/isUsedId?id=${id}`).then((result) => {
       changeLoadingState(false);
 
       if (result === "true") {
