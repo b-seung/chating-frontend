@@ -26,7 +26,6 @@ const Successed = ({ friend, isMe, isAdded, setIsAdded, onAdd }) => {
     } else {
       alert("エラーが発生しました。\nもう一度やり直してください。");
     }
-    onAdd(friend);
   };
 
   return (
@@ -115,6 +114,7 @@ const AddFriend = ({
   const onAddFriend = useCallback(
     (data) => {
       const result = postData("/friend/addFriend", { id: data.id }).then((result) => {
+        console.log(result);
         if (result["error"]) return false;
         addMyList(data);
         if (searchFriend.id === data.id) setIsAdded(true);

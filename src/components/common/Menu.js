@@ -27,7 +27,7 @@ const Menu = ({ menu, changeMenu, loginState, setLoginState }) => {
 
   const clickLogout = () => {
     setLoginState(false);
-    getText("/member/logout").then((result) => changeMenu());
+    getText("/member/logout").then(() => changeMenu());
   };
 
   return (

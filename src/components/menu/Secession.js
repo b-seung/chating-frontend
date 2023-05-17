@@ -1,10 +1,19 @@
 import PreButton from "../common/PreButton";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
+import { isError } from "../../modules/common";
+import { changeLoadingState } from "../../modules/loading";
+import { setLoginState } from "../../modules/login";
+import { getJson, getText, postData } from "../../api/api";
 import "../../css/Form.scss";
 
 const Secession = () => {
   const navigate = useNavigate();
+
+  const [id, setId] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [birthday, setBirthday] = useState("");
 
   const onPreClick = () => {
     navigate(-1);
@@ -26,9 +35,22 @@ const Secession = () => {
   const onClick = () => {
     const password = prompt("退会をするために現在のパスワードを入力してください。", "");
 
-    alert("退会しました。ありがとうございました。");
-
-    navigate("/login");
+    postData("/member/secession", { password: password })
+      .then((result) => {
+        isError(navigate, result["error"]);
+        return result["sucess"];
+      })
+      .then((result) => {
+        if (result) {
+          getText("/member/logout").then(() => {
+            alert("退会しました。ありがとうございました。");
+            navigate("/login");
+            setLoginState(false);
+          });
+        } else {
+          alert("パスワードが間違っています。\n確認してもう一度やり直してください。");
+        }
+      });
   };
 
   return (
@@ -43,15 +65,15 @@ const Secession = () => {
       <div className="form">
         <div className="box">
           <div className="key">ログインID</div>
-          <div className="value">id</div>
+          <div className="value">{id}</div>
         </div>
         <div className="box">
           <div className="key">ニックネーム</div>
-          <div className="value">id</div>
+          <div className="value">{nickname}</div>
         </div>
         <div className="box">
           <div className="key">生年月日</div>
-          <div className="value">id</div>
+          <div className="value">{birthday}</div>
         </div>
         <div className="btnBox">
           <button className="preBtn" onClick={onPreClick}>
@@ -66,4 +88,4 @@ const Secession = () => {
   );
 };
 
-export default Secession;
+export default connect(({}) => ({}), { changeLoadingState, setLoginState })(Secession);
