@@ -1,7 +1,6 @@
 import { MdClear, MdSearch } from "react-icons/md";
 import "../../css/Search.scss";
 import { useState, useEffect } from "react";
-import { friendsTableTest } from "../../api/test";
 import { chatTableTest } from "../../api/test";
 import { connect } from "react-redux";
 import { changeSearch } from "../../modules/header";
@@ -10,7 +9,7 @@ const FriendItem = ({ friend }) => {
   return (
     <div className="list">
       <div className="image" />
-      <div className="name">{friend}</div>
+      <div className="name">{friend.id}</div>
     </div>
   );
 };
@@ -27,7 +26,7 @@ const ChatItem = ({ chat }) => {
   );
 };
 
-const Search = ({ search, changeSearch }) => {
+const Search = ({ search, friendList, changeSearch }) => {
   const [checkValue, setCheckValue] = useState("友達");
   const [searchValue, setSearchValue] = useState("");
 
@@ -58,9 +57,9 @@ const Search = ({ search, changeSearch }) => {
       </div>
       <div className="bottomBox">
         <div className="resultTitle">{checkValue}</div>
-        {checkValue === "友達"
-          ? friendsTableTest.getFriendsList("test1").map((friend, index) => {
-              if (friend.indexOf(searchValue) !== -1) {
+        {checkValue === "友達" && !friendList["error"]
+          ? friendList.map((friend, index) => {
+              if (friend.id.indexOf(searchValue) !== -1) {
                 return <FriendItem key={index} friend={friend} />;
               }
             })
@@ -75,8 +74,9 @@ const Search = ({ search, changeSearch }) => {
 };
 
 export default connect(
-  ({ header }) => ({
+  ({ header, home }) => ({
     search: header.search,
+    friendList: home.friendList,
   }),
   { changeSearch }
 )(Search);

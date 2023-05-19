@@ -6,19 +6,19 @@ import { getJson } from "../api/api";
 import { chatTableTest, friendsTableTest, loginTableTest } from "../api/test";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { changeModal } from "../modules/header";
-
+import { setFriendList } from "../modules/home";
 import "../css/Home.scss";
 
-const FriendItem = ({ id, openModal, navigate }) => {
+const FriendItem = ({ friend, openModal, navigate }) => {
   const onClickFriend = () => {
     openModal();
-    navigate(`.?id=${id}`);
+    navigate(`.?id=${friend.id}`);
   };
 
   return (
     <div className="friendItem" onClick={onClickFriend}>
       <div className="image"></div>
-      <div className="name">{id}</div>
+      <div className="name">{friend.nickname}</div>
     </div>
   );
 };
@@ -46,18 +46,15 @@ const TalkItem = ({ chat, navigate }) => {
   );
 };
 
-const Home = ({ loginState, changeModal }) => {
+const Home = ({ friendList, changeModal, setFriendList }) => {
   const navigate = useNavigate();
 
   const [openFriends, setOpenFriends] = useState(true);
   const [openChat, setOpenChat] = useState(true);
 
-  const [friends, setFriends] = useState(new Array());
-
   useEffect(() => {
     getJson("/member/check")
       .then((result) => {
-        console.log(result);
         if (result["error"]) {
           alert("ログインからしてください。");
           navigate("/login");
@@ -66,7 +63,7 @@ const Home = ({ loginState, changeModal }) => {
       .then(() => {
         getJson("/friend")
           .then((result) => {
-            setFriends(result);
+            setFriendList(result);
           })
           .catch((reason) => {
             alert("エラーが発生しました。\nログイン画面に戻ります。");
@@ -102,9 +99,9 @@ const Home = ({ loginState, changeModal }) => {
         {openFriends ? <MdKeyboardArrowDown /> : <MdKeyboardArrowUp />}
       </div>
       <div className={`friendsBox ${openFriends ? "" : "hidden"}`}>
-        {friends.length === 0 && <div className="noFriend">ーーーーーなしーーーーー</div>}
-        {friends.map((id, index) => (
-          <FriendItem id={id} openModal={changeModal} navigate={navigate} key={index}></FriendItem>
+        {friendList.length === 0 && <div className="noFriend">ーーーーーなしーーーーー</div>}
+        {friendList.map((friend, index) => (
+          <FriendItem friend={friend} openModal={changeModal} navigate={navigate} key={index}></FriendItem>
         ))}
       </div>
       <div className={`title ${openFriends && "chattitle"}`} onClick={openChatsList}>
@@ -120,4 +117,4 @@ const Home = ({ loginState, changeModal }) => {
   );
 };
 
-export default connect(({ login }) => ({ loginState: login.loginState }), { changeModal })(Home);
+export default connect(({ home }) => ({ friendList: home.friendList }), { changeModal, setFriendList })(Home);

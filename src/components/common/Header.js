@@ -6,6 +6,7 @@ import { changeMenu, changeSearch } from "../../modules/header";
 import { setLoginState } from "../../modules/login";
 import { isError } from "../../modules/common";
 import { getJson } from "../../api/api";
+import { useState } from "react";
 
 const Header = ({ menu, search, changeMenu, changeSearch, setLoginState }) => {
   const navigate = useNavigate();
