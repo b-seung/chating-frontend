@@ -1,12 +1,12 @@
 import { useNavigate, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
-import { getFormatDate, getFormatTime } from "../modules/common";
 import { getJson } from "../api/api";
-import { chatTableTest, friendsTableTest, loginTableTest } from "../api/test";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { changeModal } from "../modules/header";
-import { setFriendList } from "../modules/home";
+import { getFormatDate, getFormatTime } from "../modules/common";
+import { setFriendList, setChatingList } from "../modules/home";
+import { isError } from "../modules/common";
 import "../css/Home.scss";
 
 const FriendItem = ({ friend, openModal, navigate }) => {
@@ -23,66 +23,56 @@ const FriendItem = ({ friend, openModal, navigate }) => {
   );
 };
 
-const TalkItem = ({ chat, navigate }) => {
-  const { id, text } = chat;
-  const date = new Date(chat.datetime);
+const TalkItem = ({ room, navigate }) => {
+  const { room_id, title, content, sended_time } = room;
 
+  const date = sended_time !== null ? new Date(sended_time) : null;
   const onClickChat = () => {
-    navigate(`/chat?id=${id}`);
+    navigate(`/chat?room_id=${room_id}&title=${title}`);
   };
 
   return (
     <div className="talkItem" onClick={onClickChat}>
       <div className="image"></div>
       <div className="mid">
-        <div className="name">{id}</div>
-        <div className="text">{text}</div>
+        <div className="name">{title}</div>
+        <div className="text">{content}</div>
       </div>
       <div className="datetime">
-        <div className="date">{getFormatDate(date.getFullYear(), date.getMonth(), date.getDate())}</div>
-        <div className="time">{getFormatTime(date.getHours(), date.getMinutes())}</div>
+        {date !== null && (
+          <div className="date">{getFormatDate(date.getFullYear(), date.getMonth(), date.getDate())}</div>
+        )}
+        {date !== null && <div className="time">{getFormatTime(date.getHours(), date.getMinutes())}</div>}
       </div>
     </div>
   );
 };
 
-const Home = ({ friendList, changeModal, setFriendList }) => {
+const Home = ({ friendList, chatingList, changeModal, setFriendList, setChatingList }) => {
   const navigate = useNavigate();
 
   const [openFriends, setOpenFriends] = useState(true);
   const [openChat, setOpenChat] = useState(true);
 
   useEffect(() => {
-    getJson("/member/check")
-      .then((result) => {
-        if (result["error"]) {
-          alert("ログインからしてください。");
-          navigate("/login");
-        }
-      })
-      .then(() => {
-        getJson("/friend")
-          .then((result) => {
-            setFriendList(result);
-          })
-          .catch((reason) => {
-            alert("エラーが発生しました。\nログイン画面に戻ります。");
-            navigate("/login");
-          });
-      });
+    getJson("/member/check").then((result) => {
+      if (result["error"]) {
+        alert("ログインからしてください。");
+        navigate("/login");
+      } else {
+        getJson("/friend").then((result) => {
+          isError(navigate, result["error"]);
+          setFriendList(result);
+        });
+
+        getJson("/room/getRoomId").then((result) => {
+          isError(navigate, result["error"]);
+          console.log(result);
+          setChatingList(result);
+        });
+      }
+    });
   }, []);
-
-  useEffect(() => {}, []);
-
-  // useEffect(() => {
-  //   if (loginId === null) {
-  //     if (!alert("ログインしてください。")) document.location = "/login";
-  //   }
-  // });
-
-  // getJson("/friend/friends").then((result) => setFriends(result));
-
-  const chatsList = chatTableTest.getList();
 
   const openFriendsList = () => {
     setOpenFriends(!openFriends);
@@ -109,12 +99,16 @@ const Home = ({ friendList, changeModal, setFriendList }) => {
         {openChat ? <MdKeyboardArrowDown /> : <MdKeyboardArrowUp />}
       </div>
       <div className={`chatsBox ${openChat ? "" : "hidden"}`}>
-        {chatsList.map((chat, index) => (
-          <TalkItem chat={chat} key={index} navigate={navigate}></TalkItem>
+        {chatingList.map((chat, index) => (
+          <TalkItem room={chat} key={index} navigate={navigate}></TalkItem>
         ))}
       </div>
     </div>
   );
 };
 
-export default connect(({ home }) => ({ friendList: home.friendList }), { changeModal, setFriendList })(Home);
+export default connect(({ home }) => ({ friendList: home.friendList, chatingList: home.chatingList }), {
+  changeModal,
+  setFriendList,
+  setChatingList,
+})(Home);

@@ -12,8 +12,9 @@ const ChatOrManage = ({ openModal = null, id }) => {
   const clickChat = () => {
     if (openModal !== null) openModal(false);
 
-    getJson(`/room/clickChat?id=${id}`).then((room_id) => {
-      navigate(`/chat?roomId=${room_id}&id=${id}`);
+    getJson(`/room/clickChat?id=${id}`).then((result) => {
+      console.log(result);
+      navigate(`/chat?roomId=${result["room_id"]}&title=${result["title"]}&id=${id}`);
     });
   };
   return (
