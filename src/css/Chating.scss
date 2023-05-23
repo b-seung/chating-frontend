@@ -78,6 +78,27 @@
       margin-left: auto;
     }
   }
+  .sendForm {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    width: 95vw;
+  }
+
+  input {
+    border-radius: 10px;
+    flex-grow: 1;
+    font-size: 15px;
+  }
+
+  .sendBtn {
+    cursor: pointer;
+    width: 5vw;
+    border: 1px solid #00000033;
+    border-radius: 30px;
+    padding: 10px;
+    margin-left: 10px;
+  }
 }
 
 @media (max-width: 500px) {

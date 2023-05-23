@@ -1,7 +1,10 @@
 import PreButton from "./common/PreButton";
-import { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { MdOutlineSubdirectoryArrowLeft } from "react-icons/md";
+import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import SockJS from "sockjs-client";
+import { changeLoadingState } from "../modules/loading";
 import "../css/Chating.scss";
 
 const DateItem = ({ date }) => {
@@ -24,23 +27,43 @@ const ReceiveItem = () => {
     </div>
   );
 };
-const Chating = () => {
-  const [socket, setSocket] = useState(new SockJS("/ws/chat"));
+const Chating = ({ changeLoadingState }) => {
+  const [socket, setSocket] = useState(
+    new SockJS("/ws/chat", null, { transports: ["websocket", "xhr-streaming", "xhr-polling"] })
+  );
+  const [connect, setConnect] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const input = useRef(null);
+
   const roomId = searchParams.get("room_id");
   const title = searchParams.get("title");
 
   useEffect(() => {
+    changeLoadingState(true);
     socket.onopen = () => {
+      setConnect(true);
+      changeLoadingState(false);
       socket.send(JSON.stringify({ chatRoomId: roomId, type: "JOIN" }));
     };
 
-    return () => {
-      // socket.onclose = () => {
-      //   console.log("close");
-      // };
+    socket.onmessage = (e) => {
+      const content = JSON.parse(e.data);
+      const message = content.message;
+      console.log(content);
+      socket.close();
     };
-  }, []);
+
+    socket.onclose = () => {
+      console.log("close");
+    };
+  }, [socket]);
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    socket.send(JSON.stringify({ chatRoomId: roomId, type: "SEND", message: input.current.value }));
+    input.current.value = "";
+  };
 
   return (
     <div className="chatPage">
@@ -52,9 +75,25 @@ const Chating = () => {
         <SendItem></SendItem>
         <ReceiveItem></ReceiveItem>
         <SendItem></SendItem>
+        <ReceiveItem></ReceiveItem>
+        <SendItem></SendItem>
+        <ReceiveItem></ReceiveItem>
+        <SendItem></SendItem>
+        <ReceiveItem></ReceiveItem>
+        <SendItem></SendItem>
+        <ReceiveItem></ReceiveItem>
+        <SendItem></SendItem>
+        <ReceiveItem></ReceiveItem>
+        <SendItem></SendItem>
+        <ReceiveItem></ReceiveItem>
+        <SendItem></SendItem>
       </div>
+      <form className="sendForm" onSubmit={sendMessage}>
+        <input ref={input} />
+        <MdOutlineSubdirectoryArrowLeft className="sendBtn" />
+      </form>
     </div>
   );
 };
 
-export default Chating;
+export default connect(({}) => ({}), { changeLoadingState })(Chating);
