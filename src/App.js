@@ -18,10 +18,11 @@ import FriendManagement from "./components/FriendManagement";
 import Search from "./components/common/Search";
 import Chating from "./components/Chating";
 import Loading from "./components/common/Loading";
+import SocketProvider from "./socket/SocketProvider";
 
 const App = ({ loadingState }) => {
   return (
-    <>
+    <SocketProvider>
       {loadingState && <Loading></Loading>}
       <Header></Header>
       <div className="bodyPart">
@@ -42,7 +43,7 @@ const App = ({ loadingState }) => {
           <Route path="/chat" element={<Chating></Chating>} />
         </Routes>
       </div>
-    </>
+    </SocketProvider>
   );
 };
 

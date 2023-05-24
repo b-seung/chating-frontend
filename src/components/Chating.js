@@ -1,11 +1,12 @@
 import PreButton from "./common/PreButton";
 import { connect } from "react-redux";
 import { MdOutlineSubdirectoryArrowLeft } from "react-icons/md";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import SockJS from "sockjs-client";
 import { changeLoadingState } from "../modules/loading";
+import { WebSocketContext } from "../socket/SocketProvider";
 import "../css/Chating.scss";
+import { getDateTime } from "../modules/common";
 
 const DateItem = ({ date }) => {
   return <div className="date">{date}</div>;
@@ -27,41 +28,52 @@ const ReceiveItem = () => {
     </div>
   );
 };
-const Chating = ({ changeLoadingState }) => {
-  const [socket, setSocket] = useState(
-    new SockJS("/ws/chat", null, { transports: ["websocket", "xhr-streaming", "xhr-polling"] })
-  );
-  const [connect, setConnect] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
+const Chating = ({ connectState }) => {
+  const ws = useContext(WebSocketContext);
+  const [kaiwa, setKaiwa] = useState(new Array());
 
   const input = useRef(null);
+  const contentBox = useRef(null);
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const roomId = searchParams.get("room_id");
   const title = searchParams.get("title");
 
+  const date = new Date();
+  const now = useCallback(() => {
+    return getDateTime(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds(),
+      date.getMilliseconds()
+    );
+  }, []);
+
   useEffect(() => {
-    changeLoadingState(true);
-    socket.onopen = () => {
-      setConnect(true);
-      changeLoadingState(false);
-      socket.send(JSON.stringify({ chatRoomId: roomId, type: "JOIN" }));
-    };
+    if (connectState) ws.current.send(JSON.stringify({ chatRoomId: roomId, type: "JOIN", sendTime: now() }));
 
-    socket.onmessage = (e) => {
-      const content = JSON.parse(e.data);
-      const message = content.message;
-      console.log(content);
-      socket.close();
+    return () => {
+      if (connectState) ws.current.send(JSON.stringify({ chatRoomId: roomId, type: "LEAVE", sendTime: now() }));
     };
+  }, [connectState]);
 
-    socket.onclose = () => {
-      console.log("close");
-    };
-  }, [socket]);
+  useEffect(() => {
+    contentBox.current.scrollTo(0, contentBox.current.clientHeight);
+  });
 
   const sendMessage = (e) => {
     e.preventDefault();
-    socket.send(JSON.stringify({ chatRoomId: roomId, type: "SEND", message: input.current.value }));
+    ws.current.send(
+      JSON.stringify({
+        chatRoomId: roomId,
+        type: "SEND",
+        message: input.current.value,
+        sendTime: now(),
+      })
+    );
     input.current.value = "";
   };
 
@@ -69,7 +81,7 @@ const Chating = ({ changeLoadingState }) => {
     <div className="chatPage">
       <PreButton />
       <div className="title">{title}</div>
-      <div className="content">
+      <div className="content" ref={contentBox}>
         <DateItem date="2023-04-28" />
         <ReceiveItem></ReceiveItem>
         <SendItem></SendItem>
@@ -90,10 +102,12 @@ const Chating = ({ changeLoadingState }) => {
       </div>
       <form className="sendForm" onSubmit={sendMessage}>
         <input ref={input} />
-        <MdOutlineSubdirectoryArrowLeft className="sendBtn" />
+        <button type="submit">
+          <MdOutlineSubdirectoryArrowLeft className="sendBtn" />
+        </button>
       </form>
     </div>
   );
 };
 
-export default connect(({}) => ({}), { changeLoadingState })(Chating);
+export default connect(({ loading }) => ({ connectState: loading.connectState }), { changeLoadingState })(Chating);

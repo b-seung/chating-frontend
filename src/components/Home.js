@@ -5,7 +5,7 @@ import { getJson } from "../api/api";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { changeModal } from "../modules/header";
 import { getFormatDate, getFormatTime } from "../modules/common";
-import { setFriendList, setChatingList } from "../modules/home";
+import { setFriendList, setChatList } from "../modules/home";
 import { isError } from "../modules/common";
 import "../css/Home.scss";
 
@@ -48,7 +48,7 @@ const TalkItem = ({ room, navigate }) => {
   );
 };
 
-const Home = ({ friendList, chatingList, changeModal, setFriendList, setChatingList }) => {
+const Home = ({ friendList, chatList, changeModal, setFriendList, setChatList }) => {
   const navigate = useNavigate();
 
   const [openFriends, setOpenFriends] = useState(true);
@@ -68,7 +68,7 @@ const Home = ({ friendList, chatingList, changeModal, setFriendList, setChatingL
         getJson("/room/getRoomId").then((result) => {
           isError(navigate, result["error"]);
           console.log(result);
-          setChatingList(result);
+          setChatList(result);
         });
       }
     });
@@ -99,7 +99,7 @@ const Home = ({ friendList, chatingList, changeModal, setFriendList, setChatingL
         {openChat ? <MdKeyboardArrowDown /> : <MdKeyboardArrowUp />}
       </div>
       <div className={`chatsBox ${openChat ? "" : "hidden"}`}>
-        {chatingList.map((chat, index) => (
+        {chatList.map((chat, index) => (
           <TalkItem room={chat} key={index} navigate={navigate}></TalkItem>
         ))}
       </div>
@@ -107,8 +107,8 @@ const Home = ({ friendList, chatingList, changeModal, setFriendList, setChatingL
   );
 };
 
-export default connect(({ home }) => ({ friendList: home.friendList, chatingList: home.chatingList }), {
+export default connect(({ home }) => ({ friendList: home.friendList, chatList: home.chatList }), {
   changeModal,
   setFriendList,
-  setChatingList,
+  setChatList,
 })(Home);

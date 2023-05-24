@@ -1,15 +1,15 @@
 import { createAction, handleActions } from "redux-actions";
 
 const SET_FRIEND_LIST = "home/SET_FRIEND_LIST";
-const SET_CHATING_LIST = "home/SET_CHATING_LIST";
+const SET_CHAT_LIST = "home/SET_CHAT_LIST";
 
 const initialState = {
   friendList: new Array(),
-  chatingList: new Array(),
+  chatList: new Array(),
 };
 
 export const setFriendList = createAction(SET_FRIEND_LIST, (list) => list);
-export const setChatingList = createAction(SET_CHATING_LIST, (list) => list);
+export const setChatList = createAction(SET_CHAT_LIST, (list) => list);
 
 const home = handleActions(
   {
@@ -17,9 +17,9 @@ const home = handleActions(
       ...state,
       friendList: action.payload,
     }),
-    [SET_CHATING_LIST]: (state, action) => ({
+    [SET_CHAT_LIST]: (state, action) => ({
       ...state,
-      chatingList: action.payload,
+      chatList: action.payload,
     }),
   },
   initialState

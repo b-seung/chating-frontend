@@ -19,14 +19,14 @@ const ChatItem = ({ chat }) => {
     <div className="list">
       <div className="image" />
       <div className="contentBox">
-        <div className="name">{chat.id}</div>
-        <div className="text">{chat.text}</div>
+        <div className="name">{chat.title}</div>
+        <div className="text">{chat.content}</div>
       </div>
     </div>
   );
 };
 
-const Search = ({ search, friendList, changeSearch }) => {
+const Search = ({ search, friendList, chatList, changeSearch }) => {
   const [checkValue, setCheckValue] = useState("友達");
   const [searchValue, setSearchValue] = useState("");
 
@@ -63,8 +63,8 @@ const Search = ({ search, friendList, changeSearch }) => {
                 return <FriendItem key={index} friend={friend} />;
               }
             })
-          : chatTableTest.getList().map((chat, index) => {
-              if (chat.id.indexOf(searchValue) !== -1) {
+          : chatList.map((chat, index) => {
+              if (chat.title.indexOf(searchValue) !== -1) {
                 return <ChatItem key={index} chat={chat} />;
               }
             })}
@@ -77,6 +77,7 @@ export default connect(
   ({ header, home }) => ({
     search: header.search,
     friendList: home.friendList,
+    chatList: home.chatList,
   }),
   { changeSearch }
 )(Search);

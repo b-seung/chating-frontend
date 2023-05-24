@@ -29,7 +29,7 @@ const Header = ({ menu, search, changeMenu, changeSearch, setLoginState }) => {
   const onClickSearch = () => {
     getJson("/member/check").then((result) => {
       isError(navigate, result["error"]);
-      changeSearch();
+      if (!result["error"]) changeSearch();
     });
   };
 
