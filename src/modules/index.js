@@ -3,8 +3,8 @@ import login from "./login";
 import header from "./header";
 import loading from "./loading";
 import addFriend from "./addFriend";
-import home from "./home";
+import database from "./database";
 
-const rootReducer = combineReducers({ login, header, loading, addFriend, home });
+const rootReducer = combineReducers({ login, header, loading, addFriend, database });
 
 export default rootReducer;

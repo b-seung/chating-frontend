@@ -7,7 +7,7 @@ import { changeLoadingState } from "../../modules/loading";
 import { isError } from "../../modules/common";
 import { useNavigate } from "react-router-dom";
 
-const MyPage = ({ changeLoadingState }) => {
+const MyPage = ({ changeLoadingState, friendList }) => {
   const navigate = useNavigate();
 
   const [id, setId] = useState("");
@@ -26,6 +26,8 @@ const MyPage = ({ changeLoadingState }) => {
       setBirthday(result["birthday"]);
     });
   }, []);
+
+  const allDelete = () => {};
 
   return (
     <div className="myPage">
@@ -47,13 +49,15 @@ const MyPage = ({ changeLoadingState }) => {
           </div>
           <div className="box">
             <div className="subtitle">友達数</div>
-            <div className="content">id</div>
+            <div className="content">{`${friendList === undefined ? 0 : friendList.length}명`}</div>
           </div>
         </div>
-        <div className="removeData">すべてのデータを削除する</div>
+        <div className="removeData" onClick={allDelete}>
+          すべてのデータを削除する
+        </div>
       </div>
     </div>
   );
 };
 
-export default connect(() => ({}), { changeLoadingState })(MyPage);
+export default connect((database) => ({ friendList: database.friendList }), { changeLoadingState })(MyPage);

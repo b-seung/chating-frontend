@@ -5,7 +5,7 @@ import { getJson } from "../api/api";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { changeModal } from "../modules/header";
 import { getFormatDate, getFormatTime } from "../modules/common";
-import { setFriendList, setChatList } from "../modules/home";
+import { setFriendList, setChatList } from "../modules/database";
 import { isError } from "../modules/common";
 import "../css/Home.scss";
 
@@ -40,7 +40,7 @@ const TalkItem = ({ room, navigate }) => {
       </div>
       <div className="datetime">
         {date !== null && (
-          <div className="date">{getFormatDate(date.getFullYear(), date.getMonth(), date.getDate())}</div>
+          <div className="date">{getFormatDate(date.getFullYear(), date.getMonth() + 1, date.getDate())}</div>
         )}
         {date !== null && <div className="time">{getFormatTime(date.getHours(), date.getMinutes())}</div>}
       </div>
@@ -107,7 +107,7 @@ const Home = ({ friendList, chatList, changeModal, setFriendList, setChatList })
   );
 };
 
-export default connect(({ home }) => ({ friendList: home.friendList, chatList: home.chatList }), {
+export default connect(({ database }) => ({ friendList: database.friendList, chatList: database.chatList }), {
   changeModal,
   setFriendList,
   setChatList,

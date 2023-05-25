@@ -1,11 +1,12 @@
 import React, { createContext, useRef } from "react";
 import SockJS from "sockjs-client";
 import { connect } from "react-redux";
+import { addMessage } from "../modules/database";
 import { changeConnectState } from "../modules/loading";
 
 export const WebSocketContext = createContext(null);
 
-const SocketProvider = ({ children, changeConnectState }) => {
+const SocketProvider = ({ children, changeConnectState, addMessage }) => {
   const socketUrl = "/ws/chat";
   // const socket = new SockJS("/ws/chat", null, { transports: ["websocket", "xhr-streaming", "xhr-polling"] });
   let ws = useRef(null);
@@ -22,7 +23,13 @@ const SocketProvider = ({ children, changeConnectState }) => {
     ws.current.onmessage = (e) => {
       const content = JSON.parse(e.data);
       const message = content.message;
-      console.log(message);
+      addMessage({
+        room_id: content.roomId,
+        from_id: content.fromId,
+        content: content.message,
+        sended_time: content.sendTime,
+      });
+      console.log(content);
     };
 
     ws.current.onclose = (error) => {
@@ -41,4 +48,4 @@ const SocketProvider = ({ children, changeConnectState }) => {
   return <WebSocketContext.Provider value={ws}>{children}</WebSocketContext.Provider>;
 };
 
-export default connect(({}) => ({}), { changeConnectState })(SocketProvider);
+export default connect(({}) => ({}), { changeConnectState, addMessage })(SocketProvider);

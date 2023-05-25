@@ -1,7 +1,6 @@
 import { MdClear, MdSearch } from "react-icons/md";
 import "../../css/Search.scss";
 import { useState, useEffect } from "react";
-import { chatTableTest } from "../../api/test";
 import { connect } from "react-redux";
 import { changeSearch } from "../../modules/header";
 
@@ -74,10 +73,10 @@ const Search = ({ search, friendList, chatList, changeSearch }) => {
 };
 
 export default connect(
-  ({ header, home }) => ({
+  ({ header, database }) => ({
     search: header.search,
-    friendList: home.friendList,
-    chatList: home.chatList,
+    friendList: database.friendList,
+    chatList: database.chatList,
   }),
   { changeSearch }
 )(Search);
