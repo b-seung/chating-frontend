@@ -2,8 +2,9 @@ import "../../css/MyPage.scss";
 import PreButton from "../common/PreButton";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { getJson } from "../../api/api";
+import { getJson, postData } from "../../api/api";
 import { changeLoadingState } from "../../modules/loading";
+import { setFriendList } from "../../modules/database";
 import { isError } from "../../modules/common";
 import { useNavigate } from "react-router-dom";
 
@@ -27,7 +28,11 @@ const MyPage = ({ changeLoadingState, friendList }) => {
     });
   }, []);
 
-  const allDelete = () => {};
+  const allDelete = () => {
+    postData("/member/deleteData", { id: id }).then((result) => {
+      setFriendList(new Array());
+    });
+  };
 
   return (
     <div className="myPage">
@@ -60,4 +65,6 @@ const MyPage = ({ changeLoadingState, friendList }) => {
   );
 };
 
-export default connect((database) => ({ friendList: database.friendList }), { changeLoadingState })(MyPage);
+export default connect(({ database }) => ({ friendList: database.friendList }), { changeLoadingState, setFriendList })(
+  MyPage
+);
