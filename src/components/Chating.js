@@ -23,7 +23,7 @@ const SendItem = ({ message }) => {
 
   return (
     <div className="send">
-      <div className="time">{message.sended === false ? <LoadItem></LoadItem> : time}</div>
+      <div className="time">{message.sended === false ? <LoadItem key={time}></LoadItem> : time}</div>
       <div className="text">{message["content"]}</div>
     </div>
   );
